@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { LiffProvider } from "@/components/LiffProvider";
+import RecoilProvider from "@/components/RecoilProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <RecoilProvider>
+          <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
+            {children}
+          </LiffProvider>
+        </RecoilProvider>
+      </body>
     </html>
   );
 }
