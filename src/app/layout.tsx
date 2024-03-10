@@ -4,6 +4,7 @@ import "./globals.css";
 import { LiffProvider } from "@/components/custom/LiffProvider";
 import RecoilProvider from "@/components/RecoilProvider";
 import { cn } from "@/lib/utils";
+import AppBar from "@/components/custom/app-bar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,6 +31,8 @@ export default function RootLayout({
       >
         <RecoilProvider>
           <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
+            <AppBar />
+
             {children}
           </LiffProvider>
         </RecoilProvider>
