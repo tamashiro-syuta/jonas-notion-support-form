@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
-import { LiffProvider } from "@/components/LiffProvider";
+import { LiffProvider } from "@/components/custom/LiffProvider";
 import RecoilProvider from "@/components/RecoilProvider";
 import { cn } from "@/lib/utils";
 
