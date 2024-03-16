@@ -67,17 +67,13 @@ export async function POST(req: Request, res: Response) {
       });
     const budget = await getGenresBudget(genre);
     await updateBudget(budget, amount);
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: "処理が失敗しました",
-        error: error,
-      }),
-    };
-  }
 
-  return new Response("更新が完了しました", {
-    status: 200,
-  });
+    return new Response("更新が完了しました", {
+      status: 200,
+    });
+  } catch (error) {
+    return new Response("更新に失敗しました", {
+      status: 500,
+    });
+  }
 }
