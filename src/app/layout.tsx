@@ -5,6 +5,7 @@ import { LiffProvider } from "@/components/custom/LiffProvider";
 import RecoilProvider from "@/components/RecoilProvider";
 import { cn } from "@/lib/utils";
 import AppBar from "@/components/custom/app-bar";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,6 +35,7 @@ export default function RootLayout({
             <AppBar />
 
             {children}
+            <Toaster />
           </LiffProvider>
         </RecoilProvider>
       </body>

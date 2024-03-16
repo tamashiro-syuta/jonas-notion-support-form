@@ -25,7 +25,7 @@ export const AccountMenu = () => {
       setProfile(profile);
     })();
   } else {
-    liff?.login();
+    // liff?.login();
   }
 
   return (
