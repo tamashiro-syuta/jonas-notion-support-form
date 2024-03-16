@@ -25,7 +25,10 @@ export const AccountMenu = () => {
       setProfile(profile);
     })();
   } else {
-    // liff?.login();
+    // NOTE: 本番環境ではログインを必須にする
+    if (process.env.NODE_ENV === "production") {
+      liff?.login();
+    }
   }
 
   return (
