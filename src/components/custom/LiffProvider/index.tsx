@@ -1,14 +1,29 @@
 "use client";
+import React, {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { Liff } from "@line/liff";
 
-import React, { FC, PropsWithChildren, useCallback, useEffect } from "react";
-import { useSetRecoilState } from "recoil";
-import { state as liffProviderState } from "./store";
+const LiffContext = createContext<{
+  liff: Liff | null;
+  liffError: string | null;
+}>({ liff: null, liffError: null });
+
+export const useLiff = () => useContext(LiffContext);
 
 export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
   children,
   liffId,
 }) => {
-  const setLiffProvider = useSetRecoilState(liffProviderState);
+  const [liff, setLiff] = useState<Liff | null>(null);
+  const [liffError, setLiffError] = useState<string | null>(null);
+
   const initLiff = useCallback(async () => {
     try {
       const liffModule = await import("@line/liff");
@@ -18,12 +33,12 @@ export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
       await liff.init({ liffId });
 
       console.log("LIFF init succeeded.");
-      setLiffProvider({ liff, liffError: null });
+      setLiff(liff);
     } catch (error) {
       console.log("LIFF init failed.");
-      setLiffProvider({ liff: null, liffError: (error as Error).toString() });
+      setLiffError((error as Error).toString());
     }
-  }, [liffId, setLiffProvider]);
+  }, [liffId]);
 
   // init Liff
   useEffect(() => {
@@ -31,5 +46,14 @@ export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
     initLiff();
   }, [initLiff]);
 
-  return <>{children}</>;
+  return (
+    <LiffContext.Provider
+      value={{
+        liff,
+        liffError,
+      }}
+    >
+      {children}
+    </LiffContext.Provider>
+  );
 };

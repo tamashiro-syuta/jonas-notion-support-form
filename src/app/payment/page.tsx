@@ -6,7 +6,7 @@ import { clsx } from "clsx";
 import { Inputs, schema } from "./zod";
 import { toast } from "sonner";
 
-export default function App() {
+export default function Page() {
   const {
     register,
     handleSubmit,

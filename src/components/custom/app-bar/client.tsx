@@ -10,16 +10,28 @@ import { useEffect, useState } from "react";
 import { Profile } from "@liff/get-profile";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-import { selectors } from "../LiffProvider/store";
+// import { selectors } from "../LiffProvider/store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useLiff } from "../LiffProvider";
 
 export const AccountMenu = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const liff = selectors.useLiff();
-  const isLoggedIn = liff?.isLoggedIn();
+  // const liff = selectors.useLiff();
+  // const isLoggedIn = liff?.isLoggedIn();
+  const { liff } = useLiff();
+  const [user, setUser] = useState<Profile | null>(null);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (liff) {
+      (async () => {
+        const user = await liff.getProfile();
+        setUser(user);
+      })();
+    }
+  }, [liff]);
+
+  useEffect(() => {
+    if (liff?.isLoggedIn()) {
       (async () => {
         const profile = await liff!.getProfile();
 
@@ -32,7 +44,7 @@ export const AccountMenu = () => {
         liff?.login();
       }
     }
-  }, [isLoggedIn, liff]);
+  }, [liff]);
 
   return (
     <div id="account-icon">

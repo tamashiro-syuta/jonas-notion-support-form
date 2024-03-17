@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { LiffProvider } from "@/components/custom/LiffProvider";
-import RecoilProvider from "@/components/RecoilProvider";
 import { cn } from "@/lib/utils";
 import AppBar from "@/components/custom/app-bar";
 import { Toaster } from "sonner";
@@ -30,14 +29,12 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <RecoilProvider>
-          <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
-            <AppBar />
+        <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
+          <AppBar />
 
-            {children}
-            <Toaster />
-          </LiffProvider>
-        </RecoilProvider>
+          {children}
+          <Toaster />
+        </LiffProvider>
       </body>
     </html>
   );

@@ -1,10 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { selectors } from "@/components/custom/LiffProvider/store";
+import { useEffect, useState } from "react";
+import { useLiff } from "@/components/custom/LiffProvider";
+import { Profile } from "@liff/get-profile";
 
-export default function Home() {
-  const user = selectors.useUser();
+export default function Page() {
+  const { liff } = useLiff();
+  const [user, setUser] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    if (liff) {
+      (async () => {
+        const user = await liff.getProfile();
+        setUser(user);
+      })();
+    }
+  }, [liff]);
 
   console.log("user", user);
 
