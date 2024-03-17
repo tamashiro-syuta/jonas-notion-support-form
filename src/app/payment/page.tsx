@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { clsx } from "clsx";
 import { Inputs, schema } from "./zod";
 import { toast } from "sonner";
+import VConsole from "vconsole";
 
 export default function App() {
   const {
@@ -46,6 +48,16 @@ export default function App() {
       });
     }
   };
+
+  useEffect(() => {
+    // NOTE: レンダリング時に初期化
+    const vConsole = new VConsole();
+
+    // NOTE: アンマウント時に解除
+    return () => {
+      vConsole.destroy();
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-sm">
