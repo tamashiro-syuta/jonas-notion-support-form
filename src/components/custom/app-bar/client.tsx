@@ -6,7 +6,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Profile } from "@liff/get-profile";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
@@ -16,20 +16,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const AccountMenu = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const liff = selectors.useLiff();
+  const isLoggedIn = liff?.isLoggedIn();
 
-  if (liff?.isLoggedIn()) {
-    (async () => {
-      const profile = await liff.getProfile();
+  useEffect(() => {
+    if (isLoggedIn) {
+      (async () => {
+        const profile = await liff!.getProfile();
 
-      console.log("profile", profile);
-      setProfile(profile);
-    })();
-  } else {
-    // NOTE: 本番環境ではログインを必須にする
-    if (process.env.NODE_ENV === "production") {
-      liff?.login();
+        console.log("profile", profile);
+        setProfile(profile);
+      })();
+    } else {
+      // NOTE: 本番環境ではログインを必須にする
+      if (process.env.NODE_ENV === "production") {
+        liff?.login();
+      }
     }
-  }
+  }, [isLoggedIn, liff]);
 
   return (
     <div id="account-icon">

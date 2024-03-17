@@ -25,6 +25,30 @@ const liff = selector({
   },
 });
 
+const getUser = selector({
+  key: `${key}/selector/liff/getUser`,
+  get: async ({ get }) => {
+    const { liff } = get(state);
+    if (!liff) return null;
+
+    const user = await liff.getProfile();
+
+    return user;
+  },
+});
+
+const getIsLogin = selector({
+  key: `${key}/selector/liff/getIsLogin`,
+  get: async ({ get }) => {
+    const { liff } = get(state);
+    if (!liff) return null;
+
+    return await liff.isLoggedIn();
+  },
+});
+
 export const selectors = {
   useLiff: () => useRecoilValue(liff),
+  useUser: () => useRecoilValue(getUser),
+  useIsLogin: () => useRecoilValue(getIsLogin),
 };
