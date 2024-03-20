@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { Profile } from "@liff/get-profile";
+import { toast } from "sonner";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -14,6 +15,17 @@ export default function Page() {
       (async () => {
         const user = await liff.getProfile();
         setUser(user);
+
+        toast.success(
+          `ユーザー情報を取得しました。${user.displayName}, ${user.userId}`,
+          {
+            style: {
+              background: "green",
+              color: "white",
+            },
+            duration: 3000,
+          }
+        );
       })();
     }
   }, [liff]);
