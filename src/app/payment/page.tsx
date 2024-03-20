@@ -16,7 +16,7 @@ export default function Page() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const res = await fetch("/api", {
+    const res = await fetch("/api/payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
