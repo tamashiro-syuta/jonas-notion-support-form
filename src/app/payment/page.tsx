@@ -1,12 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { clsx } from "clsx";
-import { Inputs, schema } from "./zod";
 import { toast } from "sonner";
+import { useLiff } from "@/components/custom/LiffProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Profile } from "@liff/get-profile";
+import { Inputs, schema } from "./zod";
 
 export default function Page() {
+  const { liff } = useLiff();
+  const [user, setUser] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    if (liff) {
+      (async () => {
+        const user = await liff.getProfile();
+        setUser(user);
+      })();
+    }
+  }, [liff]);
+
   const {
     register,
     handleSubmit,
@@ -15,7 +30,28 @@ export default function Page() {
     resolver: zodResolver(schema),
   });
 
+  const isCorrectLineUser = () => {
+    const correctLineUserIDs = [
+      process.env.MY_LINE_USER_ID!,
+      process.env.JONA_LINE_USER_ID!,
+    ];
+    if (!user) return false;
+
+    return correctLineUserIDs.includes(user.userId);
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (!isCorrectLineUser()) {
+      toast.error("LINEアカウントが違います", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+        duration: 3000,
+      });
+      return;
+    }
+
     const res = await fetch("/api/payment", {
       method: "POST",
       headers: {
