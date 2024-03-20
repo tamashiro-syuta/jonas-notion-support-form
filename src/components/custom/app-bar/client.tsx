@@ -10,25 +10,12 @@ import { useEffect, useState } from "react";
 import { Profile } from "@liff/get-profile";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-// import { selectors } from "../LiffProvider/store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useLiff } from "../LiffProvider";
 
 export const AccountMenu = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
-  // const liff = selectors.useLiff();
-  // const isLoggedIn = liff?.isLoggedIn();
   const { liff } = useLiff();
-  const [user, setUser] = useState<Profile | null>(null);
-
-  useEffect(() => {
-    if (liff) {
-      (async () => {
-        const user = await liff.getProfile();
-        setUser(user);
-      })();
-    }
-  }, [liff]);
 
   useEffect(() => {
     if (liff?.isLoggedIn()) {
@@ -38,11 +25,6 @@ export const AccountMenu = () => {
         console.log("profile", profile);
         setProfile(profile);
       })();
-    } else {
-      // NOTE: 本番環境ではログインを必須にする
-      if (process.env.NODE_ENV === "production") {
-        liff?.login();
-      }
     }
   }, [liff]);
 
