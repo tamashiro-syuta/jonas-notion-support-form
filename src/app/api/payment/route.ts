@@ -2,6 +2,8 @@ import { notion } from "@/lib/notion-client";
 
 // NOTE: 未設定 かつ ジャンルが 引数の値 のレコードを取得
 async function getGenresBudget(genre: string) {
+  // NOTE: new Date().getMonth() は 0 から始まるため、 +1 する
+  const thisMonth = new Date().getMonth() + 1;
   const budget = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
     filter: {
@@ -9,7 +11,7 @@ async function getGenresBudget(genre: string) {
         {
           property: "月",
           select: {
-            equals: "未設定",
+            equals: `${thisMonth.toString()}月`,
           },
         },
         {
