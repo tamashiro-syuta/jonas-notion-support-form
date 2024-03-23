@@ -27,6 +27,8 @@ export default function Page() {
             duration: 3000,
           }
         );
+
+        liff.closeWindow();
       })();
     }
   }, [liff]);
