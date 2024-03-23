@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { Profile } from "@liff/get-profile";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -32,6 +33,27 @@ export default function Page() {
 
   console.log("user", user);
 
+  const handleClick = async () => {
+    if (liff) {
+      await liff.sendMessages([
+        {
+          type: "text",
+          text: "こんにちは",
+        },
+      ]);
+
+      await toast.success("メッセージを送信しました", {
+        style: {
+          background: "green",
+          color: "white",
+        },
+        duration: 3000,
+      });
+    } else {
+      console.log("liff is not available");
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {user ? (
@@ -53,6 +75,8 @@ export default function Page() {
       ) : (
         <p>未ログイン</p>
       )}
+
+      <Button onClick={handleClick}>メッセージ送信</Button>
     </main>
   );
 }
