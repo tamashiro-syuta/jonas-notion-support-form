@@ -35,20 +35,30 @@ export default function Page() {
 
   const handleClick = async () => {
     if (liff) {
-      await liff.sendMessages([
-        {
-          type: "text",
-          text: "こんにちは",
-        },
-      ]);
+      try {
+        await liff.sendMessages([
+          {
+            type: "text",
+            text: "こんにちは",
+          },
+        ]);
 
-      await toast.success("メッセージを送信しました", {
-        style: {
-          background: "green",
-          color: "white",
-        },
-        duration: 3000,
-      });
+        await toast.success("メッセージを送信しました", {
+          style: {
+            background: "green",
+            color: "white",
+          },
+          duration: 3000,
+        });
+      } catch (error) {
+        toast.error(`失敗！${error}`, {
+          style: {
+            background: "red",
+            color: "white",
+          },
+          duration: 5000,
+        });
+      }
     } else {
       console.log("liff is not available");
     }
