@@ -17,50 +17,32 @@ const serializeResponse = (objects: any[]) => {
 export default function Page() {
   const { liff } = useLiff();
 
-  // const fetchAndSendBudget = useCallback(async () => {
-  //   if (!liff) return;
+  const fetchAndSendBudget = useCallback(async () => {
+    if (!liff) {
+      toast.error("まずは右上のアイコンボタンからログインしようか！！！");
+      return;
+    }
 
-  //   const res = await fetch(`${window.location.origin}/api/budget`);
-  //   const data = await res.json();
-  //   console.log(data);
+    try {
+      const res = await fetch(`${window.location.origin}/api/budget`);
+      const data = await res.json();
 
-  //   await liff.sendMessages([
-  //     {
-  //       type: "text",
-  //       text: serializeResponse(data).join("\n"),
-  //     },
-  //   ]);
+      await liff.sendMessages([
+        {
+          type: "text",
+          text: serializeResponse(data).join("\n"),
+        },
+      ]);
 
-  //   await liff.closeWindow();
-  // }, [liff]);
+      await liff.closeWindow();
+    } catch (error) {
+      toast.error(`エラーが発生しました。${error}`);
+    }
+  }, [liff]);
 
   useEffect(() => {
-    const fetchAndSendBudget = async () => {
-      if (!liff) {
-        toast.error("まずは右上のアイコンボタンからログインしようか！！！");
-        return;
-      }
-
-      try {
-        const res = await fetch(`${window.location.origin}/api/budget`);
-        const data = await res.json();
-        console.log(data);
-
-        await liff.sendMessages([
-          {
-            type: "text",
-            text: serializeResponse(data).join("\n"),
-          },
-        ]);
-
-        await liff.closeWindow();
-      } catch (error) {
-        toast.error(`エラーが発生しました。${error}`);
-      }
-    };
-
     fetchAndSendBudget();
-  }, [liff]);
+  }, [fetchAndSendBudget]);
 
   if (!liff) return <p>まずは右上のアイコンボタンからログインしようか！！！</p>;
 
