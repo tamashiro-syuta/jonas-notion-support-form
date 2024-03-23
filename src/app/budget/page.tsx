@@ -2,6 +2,7 @@
 
 import { useLiff } from "@/components/custom/LiffProvider";
 import { useCallback, useEffect } from "react";
+import { toast } from "sonner";
 
 const serializeResponse = (objects: any[]) => {
   let messages = ["【カテゴリ別の予算】"];
@@ -16,26 +17,50 @@ const serializeResponse = (objects: any[]) => {
 export default function Page() {
   const { liff } = useLiff();
 
-  const fetchAndSendBudget = useCallback(async () => {
-    if (!liff) return;
+  // const fetchAndSendBudget = useCallback(async () => {
+  //   if (!liff) return;
 
-    const res = await fetch(`${window.location.origin}/api/budget`);
-    const data = await res.json();
-    console.log(data);
+  //   const res = await fetch(`${window.location.origin}/api/budget`);
+  //   const data = await res.json();
+  //   console.log(data);
 
-    await liff.sendMessages([
-      {
-        type: "text",
-        text: serializeResponse(data).join("\n"),
-      },
-    ]);
+  //   await liff.sendMessages([
+  //     {
+  //       type: "text",
+  //       text: serializeResponse(data).join("\n"),
+  //     },
+  //   ]);
 
-    await liff.closeWindow();
-  }, [liff]);
+  //   await liff.closeWindow();
+  // }, [liff]);
 
   useEffect(() => {
+    const fetchAndSendBudget = async () => {
+      if (!liff) {
+        toast.error("まずは右上のアイコンボタンからログインしようか！！！");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${window.location.origin}/api/budget`);
+        const data = await res.json();
+        console.log(data);
+
+        await liff.sendMessages([
+          {
+            type: "text",
+            text: serializeResponse(data).join("\n"),
+          },
+        ]);
+
+        await liff.closeWindow();
+      } catch (error) {
+        toast.error(`エラーが発生しました。${error}`);
+      }
+    };
+
     fetchAndSendBudget();
-  }, [fetchAndSendBudget]);
+  }, [liff]);
 
   if (!liff) return <p>まずは右上のアイコンボタンからログインしようか！！！</p>;
 
