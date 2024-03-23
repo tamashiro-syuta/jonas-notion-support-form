@@ -8,6 +8,7 @@ import { useLiff } from "@/components/custom/LiffProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Profile } from "@liff/get-profile";
 import { Inputs, schema } from "./zod";
+import Loading from "@/components/custom/Loading";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -85,14 +86,7 @@ export default function Page() {
 
   return (
     <div className="w-full max-w-sm">
-      {isSubmitting && (
-        <div
-          className="fixed top-0 right-0 bottom-0 left-0 bg-secondary bg-opacity-10 flex items-center justify-center"
-          aria-label="読み込み中"
-        >
-          <div className="animate-spin h-12 w-12 bg-primary rounded-xl"></div>
-        </div>
-      )}
+      {isSubmitting && <Loading />}
       <form
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         onSubmit={handleSubmit(onSubmit)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLiff } from "@/components/custom/LiffProvider";
+import Loading from "@/components/custom/Loading";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -21,7 +22,13 @@ export default function Page() {
 
   const fetchAndSendBudget = useCallback(async () => {
     if (!liff) {
-      toast.error("まずは右上のアイコンボタンからログインしようか！！！");
+      toast.error("まずは右上のアイコンボタンからログインしようか！！！", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+        duration: 3000,
+      });
       return;
     }
 
@@ -38,7 +45,13 @@ export default function Page() {
 
       await liff.closeWindow();
     } catch (error) {
-      toast.error(`エラーが発生しました。${error}`);
+      toast.error(`エラーが発生しました。${error}`, {
+        style: {
+          background: "red",
+          color: "white",
+        },
+        duration: 3000,
+      });
     }
   }, [liff]);
 
@@ -48,5 +61,5 @@ export default function Page() {
 
   if (!liff) return <p>まずは右上のアイコンボタンからログインしようか！！！</p>;
 
-  return <></>;
+  return <Loading />;
 }
