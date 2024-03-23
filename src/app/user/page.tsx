@@ -17,7 +17,7 @@ export default function Page() {
         const user = await liff.getProfile();
         setUser(user);
 
-        liff.closeWindow();
+        await liff.closeWindow();
       })();
     }
   }, [liff]);

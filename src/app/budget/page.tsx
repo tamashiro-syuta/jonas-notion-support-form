@@ -1,44 +1,43 @@
 "use client";
 
 import { useLiff } from "@/components/custom/LiffProvider";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useCallback, useEffect } from "react";
+
+const serializeResponse = (objects: any[]) => {
+  let messages = ["【カテゴリ別の予算】"];
+
+  objects.forEach((object) => {
+    messages.push(`${object.genre} : ${object.amount}`);
+  });
+
+  return messages;
+};
 
 export default function Page() {
   const { liff } = useLiff();
 
-  const onSubmit = async () => {
-    await liff
-      ?.sendMessages([
-        {
-          type: "text",
-          text: "Hello, World!",
-        },
-      ])
-      .then(() => {
-        toast.error("送ったよ", {
-          style: {
-            background: "red",
-            color: "white",
-          },
-          duration: 3000,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error(`エラーが発生しました : ${err.message}`, {
-          style: {
-            background: "red",
-            color: "white",
-          },
-          duration: 3000,
-        });
-      });
-  };
+  const fetchAndSendBudget = useCallback(async () => {
+    if (!liff) return;
 
-  return (
-    <div className="w-full max-w-sm">
-      <Button onClick={onSubmit}>ほげ</Button>
-    </div>
-  );
+    const res = await fetch(`${window.location.origin}/api/budget`);
+    const data = await res.json();
+    console.log(data);
+
+    await liff.sendMessages([
+      {
+        type: "text",
+        text: serializeResponse(data).join("\n"),
+      },
+    ]);
+
+    await liff.closeWindow();
+  }, [liff]);
+
+  useEffect(() => {
+    fetchAndSendBudget();
+  }, [fetchAndSendBudget]);
+
+  if (!liff) return <p>まずは右上のアイコンボタンからログインしようか！！！</p>;
+
+  return <></>;
 }
