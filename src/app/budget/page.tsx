@@ -12,8 +12,6 @@ const serializeResponse = (objects: any[]) => {
     messages.push(`${object.genre} : ${object.amount}円`);
   });
 
-  messages.push("\n「散財は、人生や」by ナオシマ");
-
   return messages;
 };
 

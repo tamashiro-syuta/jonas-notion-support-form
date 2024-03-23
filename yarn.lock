@@ -648,6 +648,15 @@
     file-type "^16.5.4"
     form-data "^4.0.0"
 
+"@line/bot-sdk@^9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@line/bot-sdk/-/bot-sdk-9.0.3.tgz#eb5a3ef951331e345b67eb79b3ff6e7fd7c6b6b5"
+  integrity sha512-WWO82H7E+XXHbpCnBbq3n0RFfn0GV7kGlwC46w9IG1VGteauXO5hnm3R+d4QPkt7kqCNBLoZpmr88LA1DE6Q8w==
+  dependencies:
+    "@types/node" "^20.0.0"
+  optionalDependencies:
+    axios "^1.0.0"
+
 "@line/liff@2.23.2":
   version "2.23.2"
   resolved "https://registry.yarnpkg.com/@line/liff/-/liff-2.23.2.tgz#475abb2847dedd1b6c0ceaee129e03175598059e"
@@ -1178,6 +1187,13 @@
   version "18.19.22"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.22.tgz#f622f92514b897e6b09903e97c16a0db8e94689f"
   integrity sha512-p3pDIfuMg/aXBmhkyanPshdfJuX5c5+bQjYLIikPLXAUycEogij/c50n/C+8XOA5L93cU4ZRXtn+dNQGi0IZqQ==
+  dependencies:
+    undici-types "~5.26.4"
+
+"@types/node@^20.0.0":
+  version "20.11.30"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.30.tgz#9c33467fc23167a347e73834f788f4b9f399d66f"
+  integrity sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==
   dependencies:
     undici-types "~5.26.4"
 

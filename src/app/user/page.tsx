@@ -25,20 +25,35 @@ export default function Page() {
   const handleClick = async () => {
     if (liff) {
       try {
-        await liff.sendMessages([
-          {
-            type: "text",
-            text: "こんにちは",
+        const userID = user?.userId;
+        const res = await fetch(`${window.location.origin}/api/lineBot`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        ]);
-
-        await toast.success("メッセージを送信しました", {
-          style: {
-            background: "green",
-            color: "white",
-          },
-          duration: 3000,
+          body: JSON.stringify({
+            message: "こんにちは！",
+            userID,
+          }),
         });
+
+        if (res.ok) {
+          await toast.success("メッセージを送信しました", {
+            style: {
+              background: "green",
+              color: "white",
+            },
+            duration: 3000,
+          });
+        } else {
+          await toast.error("失敗しました", {
+            style: {
+              background: "red",
+              color: "white",
+            },
+            duration: 5000,
+          });
+        }
       } catch (error) {
         toast.error(`失敗！${error}`, {
           style: {
