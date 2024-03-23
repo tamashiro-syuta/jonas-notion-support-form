@@ -42,25 +42,48 @@ export default function Page() {
   };
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (!liff || !user) {
+      showError({
+        message: "まずは右上のアイコンボタンからログインしようか！！！",
+      });
+      return;
+    }
     if (!isCorrectLineUser()) {
       showError({ message: "LINEアカウントが違います" });
       return;
     }
 
-    const res = await fetch("/api/payment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        genre: data.genre,
-        amount: data.amount,
-      }),
-    });
+    try {
+      const res = await fetch("/api/payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          genre: data.genre,
+          amount: data.amount,
+        }),
+      });
 
-    res.status > 400
-      ? showError({ message: "エラーが発生しました" })
-      : showSuccess({ message: "更新が完了しました" });
+      if (res.status > 400) {
+        showError({ message: "エラーが発生しました" });
+      } else {
+        const message = `【支出の追加】\nカテゴリ: ${data.genre}\n金額: ${data.amount}円`;
+        await fetch(`${window.location.origin}/api/lineBot`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message,
+            userID: user.userId,
+          }),
+        });
+        await liff.closeWindow();
+      }
+    } catch (error) {
+      showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
+    }
   };
 
   return (
