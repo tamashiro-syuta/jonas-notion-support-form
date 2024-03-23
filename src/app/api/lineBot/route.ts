@@ -1,20 +1,26 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import client from "@/lib/line-messeging-api/client";
 
-export default async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: Request, res: Response) {
+  const body = await req.json();
+  const message = body.message ? String(body.message) : undefined;
+  const userID = body.userID ? String(body.userID) : undefined;
+  if (!message)
+    return new Response("メッセージが入力されていません", { status: 400 });
+  if (!userID)
+    return new Response("ユーザーIDが入力されていません", { status: 400 });
+
   try {
-    const message = req.body.message;
-    // NOTE: 送りたいトークルームのユーザーIDかグループID
-    const userID = req.body.userID;
     await client.pushMessage(userID, {
       type: "text",
       text: message,
     });
 
-    res
-      .status(200)
-      .json({ message: `「${message}」というメッセージが送信されました。` });
-  } catch (e) {
-    res.status(500).json({ message: `error! ${e} ` });
+    return new Response(`「${message}」というメッセージが送信されました。`, {
+      status: 200,
+    });
+  } catch (error) {
+    return new Response(`更新に失敗しました。${error}`, {
+      status: 500,
+    });
   }
 }
