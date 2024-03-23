@@ -8,8 +8,10 @@ const serializeResponse = (objects: any[]) => {
   let messages = ["【カテゴリ別の予算】"];
 
   objects.forEach((object) => {
-    messages.push(`${object.genre} : ${object.amount}`);
+    messages.push(`${object.genre} : ${object.amount}円`);
   });
+
+  messages.push("\n「散財は、人生や」by ナオシマ");
 
   return messages;
 };
