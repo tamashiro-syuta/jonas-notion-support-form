@@ -2,8 +2,8 @@
 
 import { useLiff } from "@/components/custom/LiffProvider";
 import Loading from "@/components/custom/Loading";
+import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
-import { toast } from "sonner";
 
 const serializeResponse = (objects: any[]) => {
   let messages = ["【カテゴリ別の予算】"];
@@ -20,12 +20,8 @@ export default function Page() {
 
   const fetchAndSendBudget = useCallback(async () => {
     if (!liff) {
-      toast.error("まずは右上のアイコンボタンからログインしようか！！！", {
-        style: {
-          background: "red",
-          color: "white",
-        },
-        duration: 3000,
+      showError({
+        message: "まずは右上のアイコンボタンからログインしようか！！！",
       });
       return;
     }
@@ -48,21 +44,13 @@ export default function Page() {
 
       await liff.closeWindow();
     } catch (error) {
-      toast.error(`エラーが発生しました。${error}`, {
-        style: {
-          background: "red",
-          color: "white",
-        },
-        duration: 3000,
-      });
+      showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
   }, [liff]);
 
   useEffect(() => {
     fetchAndSendBudget();
   }, [fetchAndSendBudget]);
-
-  if (!liff) return <p>まずは右上のアイコンボタンからログインしようか！！！</p>;
 
   return <Loading />;
 }

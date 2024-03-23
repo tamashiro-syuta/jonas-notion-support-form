@@ -9,7 +9,6 @@ import React, {
   useState,
 } from "react";
 import { Liff } from "@line/liff";
-import { toast } from "sonner";
 
 const LiffContext = createContext<{
   liff: Liff | null;
@@ -34,23 +33,9 @@ export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
       await liff.init({ liffId });
 
       console.log("LIFF init succeeded.");
-      toast.success("LIFF init succeeded.", {
-        style: {
-          background: "green",
-          color: "white",
-        },
-        duration: 3000,
-      });
       setLiff(liff);
     } catch (error) {
       console.log("LIFF init failed.");
-      toast.error("LIFF init failed.", {
-        style: {
-          background: "red",
-          color: "white",
-        },
-        duration: 3000,
-      });
       setLiffError((error as Error).toString());
     }
   }, [liffId]);

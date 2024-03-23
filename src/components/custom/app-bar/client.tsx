@@ -9,9 +9,9 @@ import {
 import { useEffect, useState } from "react";
 import { Profile } from "@liff/get-profile";
 import { PersonIcon } from "@radix-ui/react-icons";
-import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useLiff } from "../LiffProvider";
+import { showSuccess } from "@/lib/toast-actions";
 
 export const AccountMenu = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -43,13 +43,7 @@ export const AccountMenu = () => {
             <MenubarItem
               onClick={() => {
                 liff?.logout();
-                toast.success("ログアウトしました", {
-                  style: {
-                    background: "green",
-                    color: "white",
-                  },
-                  duration: 3000,
-                });
+                showSuccess({ message: "ログアウトしました" });
                 location.reload();
               }}
             >

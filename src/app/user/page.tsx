@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { Profile } from "@liff/get-profile";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { showError, showSuccess } from "@/lib/toast-actions";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -37,29 +37,12 @@ export default function Page() {
           }),
         });
 
-        if (res.ok) {
-          await toast.success("メッセージを送信しました", {
-            style: {
-              background: "green",
-              color: "white",
-            },
-            duration: 3000,
-          });
-        } else {
-          await toast.error("失敗しました", {
-            style: {
-              background: "red",
-              color: "white",
-            },
-            duration: 5000,
-          });
-        }
+        res.status > 400
+          ? showSuccess({ message: "メッセージを送信しました" })
+          : showError({ message: "失敗しました", duration: 5000 });
       } catch (error) {
-        toast.error(`失敗！${error}`, {
-          style: {
-            background: "red",
-            color: "white",
-          },
+        showError({
+          message: `エラーが発生しました。${error}`,
           duration: 5000,
         });
       }

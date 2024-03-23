@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { clsx } from "clsx";
-import { toast } from "sonner";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Profile } from "@liff/get-profile";
 import { Inputs, schema } from "./zod";
 import Loading from "@/components/custom/Loading";
+import { showError, showSuccess } from "@/lib/toast-actions";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -43,13 +43,7 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (!isCorrectLineUser()) {
-      toast.error("LINEアカウントが違います", {
-        style: {
-          background: "red",
-          color: "white",
-        },
-        duration: 3000,
-      });
+      showError({ message: "LINEアカウントが違います" });
       return;
     }
 
@@ -64,24 +58,9 @@ export default function Page() {
       }),
     });
 
-    if (res.status > 400) {
-      toast.error("エラーが発生しました", {
-        style: {
-          background: "red",
-          color: "white",
-        },
-        duration: 3000,
-      });
-      return;
-    } else {
-      toast.success("更新が完了しました", {
-        style: {
-          background: "green",
-          color: "white",
-        },
-        duration: 3000,
-      });
-    }
+    res.status > 400
+      ? showError({ message: "エラーが発生しました" })
+      : showSuccess({ message: "更新が完了しました" });
   };
 
   return (
