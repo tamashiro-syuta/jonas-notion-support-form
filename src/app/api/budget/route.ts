@@ -1,76 +1,105 @@
-import { notion } from "@/lib/notion-client";
+import {
+  ASSET,
+  COMMUNICATION_EXPENSES,
+  INCOME,
+  INSURANCE,
+  LIVING_EXPENSES,
+  LOAN,
+  MOTHER,
+} from "@/lib/notion/constants";
+import getBalanceForMonth, { Balance } from "@/lib/notion/getBalanceForMonth";
+import getBudgetForMonth, { Budget } from "@/lib/notion/getBudgetForMonth";
+import getSpendingForMonth, {
+  Spending,
+} from "@/lib/notion/getSpendingForMonth";
 
-// NOTE: 未設定 かつ ジャンルが 引数の値 のレコードを取得
-async function getGenresBudget(genre: string) {
-  // NOTE: new Date().getMonth() は 0 から始まるため、 +1 する
+type Amount = { genre: string; amount: number };
+
+function calcTotalAmountForEachGenre({
+  balances,
+  budgets,
+}: {
+  balances: Balance[];
+  budgets: Budget[];
+}): Amount[] {
+  return balances.map(({ genre, balance }) => {
+    const sameGenreBudget = budgets.find((budget) => budget.genre === genre);
+
+    const budget = sameGenreBudget?.budget || 0;
+    // NOTE: 残高がマイナスになる場合は、0として扱う
+    const amount = (balance > 0 ? balance : 0) + budget;
+
+    return { genre: genre, amount };
+  });
+}
+
+function calcAmountCanSpendThisMonth({
+  totalAmount,
+  thisMonthSpending,
+}: {
+  totalAmount: Amount[];
+  thisMonthSpending: Spending[];
+}): Amount[] {
+  const todayDate = new Date().getDate();
   const thisMonth = new Date().getMonth() + 1;
-  const budget = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
-    filter: {
-      and: [
-        {
-          property: "月",
-          select: {
-            equals: `${thisMonth.toString()}月`,
-          },
-        },
-        {
-          property: "項目",
-          title: {
-            equals: genre,
-          },
-        },
-      ],
-    },
+  const nowMonthLastDate = new Date(
+    new Date().getFullYear(),
+    thisMonth,
+    0
+  ).getDate();
+
+  return totalAmount.map(({ genre, amount }) => {
+    const genreSpending = thisMonthSpending.find(
+      (spending) => spending.genre === genre
+    );
+    const spent = genreSpending ? genreSpending?.spending : 0;
+    const amountCanSpend = (amount / nowMonthLastDate) * todayDate - spent;
+
+    return { genre, amount: Math.round(amountCanSpend) };
   });
-
-  // NOTE: この時点でレコードは1つしかないので、初めの値を取得
-  const record = budget.results[0];
-
-  if (!record?.object)
-    return new Response("選択した項目が見つかりませんでした", { status: 400 });
-
-  return record;
 }
 
-// NOTE: レコードの単体データが入る
-async function updateBudget(record: any, addAmount = 0) {
-  // const updateProperty = "支出額";
-  const UPDATE_PROPERTY = "支出額";
-  const assetRecordsAmount = record.properties[UPDATE_PROPERTY]?.number || 0;
+function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
+  const UNNECESSARY_GENRES = [
+    MOTHER,
+    INSURANCE,
+    LOAN,
+    LIVING_EXPENSES,
+    ASSET,
+    INCOME,
+    COMMUNICATION_EXPENSES,
+  ];
 
-  const updateResponse = await notion.pages.update({
-    page_id: record.id,
-    properties: {
-      [UPDATE_PROPERTY]: {
-        type: "number",
-        number: assetRecordsAmount + addAmount,
-      },
-    },
+  return amounts.filter((amount) => {
+    const includeUnnecessaryGenre = (UNNECESSARY_GENRES as string[]).includes(
+      amount.genre
+    );
+    if (!includeUnnecessaryGenre) return amount;
   });
-
-  console.log(updateResponse);
 }
 
-export async function POST(req: Request, res: Response) {
-  const body = await req.json();
-  console.log("exec on server", body);
-
+export async function GET(req: Request, res: Response) {
   try {
-    const genre = body.genre ? String(body.genre) : undefined;
-    const amount = body.amount ? Number(body.amount) : undefined;
-    if (!genre)
-      return new Response("項目が選択されていません", { status: 400 });
-    if (!amount)
-      return new Response("金額が入力されていません", { status: 400 });
-    if (isNaN(amount))
-      return new Response("金額に数字ではない値が検出されました", {
-        status: 400,
-      });
-    const budget = await getGenresBudget(genre);
-    await updateBudget(budget, amount);
+    const lastMonth = new Date().getMonth();
+    const thisMonth = new Date().getMonth() + 1;
 
-    return new Response("更新が完了しました", {
+    const lastMonthBalance = await getBalanceForMonth({ month: lastMonth });
+    const thisMonthBudget = await getBudgetForMonth({ month: thisMonth });
+
+    const totalAmount = calcTotalAmountForEachGenre({
+      balances: lastMonthBalance,
+      budgets: thisMonthBudget,
+    });
+
+    const thisMonthSpending = await getSpendingForMonth({ month: thisMonth });
+    const amountCanSpendThisMonth = calcAmountCanSpendThisMonth({
+      totalAmount,
+      thisMonthSpending,
+    });
+
+    const necessaryAmounts = excludeUnnecessaryGenres(amountCanSpendThisMonth);
+
+    return new Response(JSON.stringify(necessaryAmounts), {
       status: 200,
     });
   } catch (error) {
