@@ -33,13 +33,18 @@ export default function Page() {
     try {
       const res = await fetch(`${window.location.origin}/api/budget`);
       const data = await res.json();
+      const user = await liff.getProfile();
 
-      await liff.sendMessages([
-        {
-          type: "text",
-          text: serializeResponse(data).join("\n"),
+      await fetch(`${window.location.origin}/api/lineBot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ]);
+        body: JSON.stringify({
+          message: serializeResponse(data).join("\n"),
+          userID: user.userId,
+        }),
+      });
 
       await liff.closeWindow();
     } catch (error) {
