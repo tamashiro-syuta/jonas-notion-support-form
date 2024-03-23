@@ -17,17 +17,6 @@ export default function Page() {
         const user = await liff.getProfile();
         setUser(user);
 
-        toast.success(
-          `ユーザー情報を取得しました。${user.displayName}, ${user.userId}`,
-          {
-            style: {
-              background: "green",
-              color: "white",
-            },
-            duration: 3000,
-          }
-        );
-
         liff.closeWindow();
       })();
     }
