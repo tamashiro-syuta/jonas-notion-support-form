@@ -33,8 +33,8 @@ export default function Page() {
 
   const isCorrectLineUser = () => {
     const correctLineUserIDs = [
-      process.env.MY_LINE_USER_ID!,
-      process.env.JONA_LINE_USER_ID!,
+      process.env.NEXT_PUBLIC_MY_LINE_USER_ID!,
+      process.env.NEXT_PUBLIC_JONA_LINE_USER_ID!,
     ];
     if (!user) return false;
 
