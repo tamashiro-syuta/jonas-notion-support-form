@@ -4,7 +4,6 @@ import {
   INCOME,
   INSURANCE,
 } from "@/lib/notion/constants";
-import getBalanceForMonth, { Balance } from "@/lib/notion/getBalanceForMonth";
 import getBudgetForMonth, { Budget } from "@/lib/notion/getBudgetForMonth";
 import getSpendingForMonth, {
   Spending,
@@ -12,29 +11,11 @@ import getSpendingForMonth, {
 
 type Amount = { genre: string; amount: number };
 
-function calcTotalAmountForEachGenre({
-  balances,
-  budgets,
-}: {
-  balances: Balance[];
-  budgets: Budget[];
-}): Amount[] {
-  return balances.map(({ genre, balance }) => {
-    const sameGenreBudget = budgets.find((budget) => budget.genre === genre);
-
-    const budget = sameGenreBudget?.budget || 0;
-    // NOTE: 残高がマイナスになる場合は、0として扱う
-    const amount = (balance > 0 ? balance : 0) + budget;
-
-    return { genre: genre, amount };
-  });
-}
-
 function calcAmountCanSpendThisMonth({
-  totalAmount,
+  thisMonthBudget,
   thisMonthSpending,
 }: {
-  totalAmount: Amount[];
+  thisMonthBudget: Budget[];
   thisMonthSpending: Spending[];
 }): Amount[] {
   const todayDate = new Date().getDate();
@@ -45,12 +26,12 @@ function calcAmountCanSpendThisMonth({
     0
   ).getDate();
 
-  return totalAmount.map(({ genre, amount }) => {
+  return thisMonthBudget.map(({ genre, budget }) => {
     const genreSpending = thisMonthSpending.find(
       (spending) => spending.genre === genre
     );
     const spent = genreSpending ? genreSpending?.spending : 0;
-    const amountCanSpend = (amount / nowMonthLastDate) * todayDate - spent;
+    const amountCanSpend = (budget / nowMonthLastDate) * todayDate - spent;
 
     return { genre, amount: Math.round(amountCanSpend) };
   });
@@ -69,20 +50,12 @@ function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
 
 export async function GET(req: Request, res: Response) {
   try {
-    const lastMonth = new Date().getMonth();
     const thisMonth = new Date().getMonth() + 1;
-
-    const lastMonthBalance = await getBalanceForMonth({ month: lastMonth });
     const thisMonthBudget = await getBudgetForMonth({ month: thisMonth });
-
-    const totalAmount = calcTotalAmountForEachGenre({
-      balances: lastMonthBalance,
-      budgets: thisMonthBudget,
-    });
 
     const thisMonthSpending = await getSpendingForMonth({ month: thisMonth });
     const amountCanSpendThisMonth = calcAmountCanSpendThisMonth({
-      totalAmount,
+      thisMonthBudget,
       thisMonthSpending,
     });
 
