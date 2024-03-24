@@ -3,9 +3,6 @@ import {
   COMMUNICATION_EXPENSES,
   INCOME,
   INSURANCE,
-  LIVING_EXPENSES,
-  LOAN,
-  MOTHER,
 } from "@/lib/notion/constants";
 import getBalanceForMonth, { Balance } from "@/lib/notion/getBalanceForMonth";
 import getBudgetForMonth, { Budget } from "@/lib/notion/getBudgetForMonth";
@@ -60,15 +57,7 @@ function calcAmountCanSpendThisMonth({
 }
 
 function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
-  const UNNECESSARY_GENRES = [
-    MOTHER,
-    INSURANCE,
-    LOAN,
-    LIVING_EXPENSES,
-    ASSET,
-    INCOME,
-    COMMUNICATION_EXPENSES,
-  ];
+  const UNNECESSARY_GENRES = [INSURANCE, ASSET, INCOME, COMMUNICATION_EXPENSES];
 
   return amounts.filter((amount) => {
     const includeUnnecessaryGenre = (UNNECESSARY_GENRES as string[]).includes(
