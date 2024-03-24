@@ -9,7 +9,7 @@ const serializeResponse = (objects: any[]) => {
   let messages = ["【カテゴリ別の予算】"];
 
   objects.forEach((object) => {
-    messages.push(`${object.genre} : ${object.amount}円`);
+    messages.push(`${object.genre} : ${object.amount.toLocaleString()}円`);
   });
 
   return messages;
