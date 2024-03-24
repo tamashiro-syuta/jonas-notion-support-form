@@ -4,19 +4,20 @@ import {
   INCOME,
   INSURANCE,
 } from "@/lib/notion/constants";
-import getBudgetForMonth, { Budget } from "@/lib/notion/getBudgetForMonth";
-import getSpendingForMonth, {
-  Spending,
-} from "@/lib/notion/getSpendingForMonth";
+import getBudgetForMonth from "@/lib/notion/getBudgetForMonth";
+import getSpendingForMonth from "@/lib/notion/getSpendingForMonth";
+import { BaseColumn, BudgetColumn, SpendingColumn } from "@/lib/notion/types";
 
-type Amount = { genre: string; amount: number };
+interface Amount extends BaseColumn {
+  amount: number;
+}
 
 function calcAmountCanSpendThisMonth({
   thisMonthBudget,
   thisMonthSpending,
 }: {
-  thisMonthBudget: Budget[];
-  thisMonthSpending: Spending[];
+  thisMonthBudget: BudgetColumn[];
+  thisMonthSpending: SpendingColumn[];
 }): Amount[] {
   const todayDate = new Date().getDate();
   const thisMonth = new Date().getMonth() + 1;
@@ -26,14 +27,14 @@ function calcAmountCanSpendThisMonth({
     0
   ).getDate();
 
-  return thisMonthBudget.map(({ genre, budget }) => {
+  return thisMonthBudget.map(({ genre, order, budget }) => {
     const genreSpending = thisMonthSpending.find(
       (spending) => spending.genre === genre
     );
     const spent = genreSpending ? genreSpending?.spending : 0;
     const amountCanSpend = (budget / nowMonthLastDate) * todayDate - spent;
 
-    return { genre, amount: Math.round(amountCanSpend) };
+    return { genre, order, amount: Math.round(amountCanSpend) };
   });
 }
 
@@ -60,8 +61,9 @@ export async function GET(req: Request, res: Response) {
     });
 
     const necessaryAmounts = excludeUnnecessaryGenres(amountCanSpendThisMonth);
+    const sortedAmounts = necessaryAmounts.sort((a, b) => a.order - b.order);
 
-    return new Response(JSON.stringify(necessaryAmounts), {
+    return new Response(JSON.stringify(sortedAmounts), {
       status: 200,
     });
   } catch (error) {

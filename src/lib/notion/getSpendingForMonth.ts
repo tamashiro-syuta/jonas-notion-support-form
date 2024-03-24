@@ -1,17 +1,15 @@
 import { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { notion } from "../notion-client";
-import { GENRE, SPENDING } from "./constants";
+import { GENRE, ORDER, SPENDING } from "./constants";
+import { SpendingColumn } from "./types";
 
 type Props = {
   month: number;
 };
 
-export type Spending = {
-  genre: string;
-  spending: number;
-};
-
-async function getSpendingForMonth({ month }: Props): Promise<Spending[]> {
+async function getSpendingForMonth({
+  month,
+}: Props): Promise<SpendingColumn[]> {
   const data = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
     filter: {
@@ -31,10 +29,12 @@ async function getSpendingForMonth({ month }: Props): Promise<Spending[]> {
   return results.map((result) => {
     // NOTE: notionから型探すのが難しいから、一旦any
     const genre = result.properties[GENRE] as any;
+    const order = result.properties[ORDER] as any;
     const spending = result.properties[SPENDING] as any;
 
     return {
       genre: String(genre.title[0].plain_text),
+      order: Number(order.number),
       spending: Number(spending.number),
     };
   });
