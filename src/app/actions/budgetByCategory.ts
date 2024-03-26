@@ -1,3 +1,5 @@
+"use server";
+
 import {
   ASSET,
   COMMUNICATION_EXPENSES,
@@ -8,7 +10,7 @@ import getBudgetForMonth from "@/lib/notion/getBudgetForMonth";
 import getSpendingForMonth from "@/lib/notion/getSpendingForMonth";
 import { BaseColumn, BudgetColumn, SpendingColumn } from "@/lib/notion/types";
 
-interface Amount extends BaseColumn {
+export interface Amount extends BaseColumn {
   amount: number;
 }
 
@@ -49,7 +51,8 @@ function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
   });
 }
 
-export async function GET(req: Request, res: Response) {
+// NOTE: 実行時点でのカテゴリ別予算
+export async function budgetByCategory(): Promise<Amount[]> {
   try {
     const thisMonth = new Date().getMonth() + 1;
     const thisMonthBudget = await getBudgetForMonth({ month: thisMonth });
@@ -63,12 +66,8 @@ export async function GET(req: Request, res: Response) {
     const necessaryAmounts = excludeUnnecessaryGenres(amountCanSpendThisMonth);
     const sortedAmounts = necessaryAmounts.sort((a, b) => a.order - b.order);
 
-    return new Response(JSON.stringify(sortedAmounts), {
-      status: 200,
-    });
+    return sortedAmounts;
   } catch (error) {
-    return new Response("更新に失敗しました", {
-      status: 500,
-    });
+    throw new Error("更新に失敗しました");
   }
 }

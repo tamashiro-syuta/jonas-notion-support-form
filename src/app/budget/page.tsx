@@ -5,8 +5,9 @@ import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../actions/sendMessage";
+import { Amount, budgetByCategory } from "../actions/budgetByCategory";
 
-const serializeResponse = (objects: any[]) => {
+const serializeResponse = (objects: Amount[]) => {
   let messages = ["【カテゴリ別の予算】"];
 
   objects.forEach((object) => {
@@ -28,8 +29,7 @@ export default function Page() {
     }
 
     try {
-      const res = await fetch(`${window.location.origin}/api/budget`);
-      const data = await res.json();
+      const data = await budgetByCategory();
       const user = await liff.getProfile();
 
       await sendMessage({

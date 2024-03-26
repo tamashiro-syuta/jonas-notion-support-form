@@ -8,8 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Profile } from "@liff/get-profile";
 import { Inputs, schema } from "./zod";
 import Loading from "@/components/custom/Loading";
-import { showError, showSuccess } from "@/lib/toast-actions";
+import { showError } from "@/lib/toast-actions";
 import { sendMessage } from "../actions/sendMessage";
+import { addSpending } from "../actions/addSpending";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -42,7 +43,7 @@ export default function Page() {
     return correctLineUserIDs.includes(user.userId);
   };
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({ genre, amount }) => {
     if (!liff || !user) {
       showError({
         message: "まずは右上のアイコンボタンからログインしようか！！！",
@@ -55,27 +56,13 @@ export default function Page() {
     }
 
     try {
-      const res = await fetch("/api/payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          genre: data.genre,
-          amount: data.amount,
-        }),
-      });
+      await addSpending({ genre, amount });
 
-      if (res.status > 400) {
-        showError({ message: "エラーが発生しました" });
-      } else {
-        const message = `【支出の追加】\nカテゴリ: ${data.genre}\n金額: ${data.amount}円`;
-        await sendMessage({
-          message,
-          userID: user.userId,
-        });
-        await liff.closeWindow();
-      }
+      const message = `【支出の追加】\nカテゴリ: ${genre}\n金額: ${amount}円`;
+      const userID = user.userId;
+      await sendMessage({ message, userID });
+
+      await liff.closeWindow();
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }

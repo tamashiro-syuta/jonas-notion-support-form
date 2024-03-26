@@ -5,9 +5,10 @@ import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../actions/sendMessage";
+import { totalBalance } from "../actions/totalBalance";
 
-const serializeResponse = (object: number): string => {
-  return `【今月の合計残額】\n${object.toLocaleString()}円`;
+const serializeResponse = (amount: number): string => {
+  return `【今月の合計残額】\n${amount.toLocaleString()}円`;
 };
 
 export default function Page() {
@@ -22,12 +23,11 @@ export default function Page() {
     }
 
     try {
-      const res = await fetch(`${window.location.origin}/api/totalBalance`);
-      const data = await res.json();
+      const amount = await totalBalance();
       const user = await liff.getProfile();
 
       await sendMessage({
-        message: serializeResponse(data),
+        message: serializeResponse(amount),
         userID: user.userId,
       });
       await liff.closeWindow();
