@@ -10,8 +10,8 @@ interface Props {
 export async function sendMessage({ message, userID }: Props) {
   try {
     const userIDs = [
-      process.env.NEXT_PUBLIC_MY_LINE_USER_ID,
-      process.env.NEXT_PUBLIC_JONA_LINE_USER_ID,
+      process.env.MY_LINE_USER_ID,
+      process.env.JONA_LINE_USER_ID,
     ];
 
     if (!userIDs.includes(userID)) throw new Error("ユーザーIDが不正です");

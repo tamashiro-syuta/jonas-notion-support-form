@@ -33,25 +33,11 @@ export default function Page() {
     resolver: zodResolver(schema),
   });
 
-  const isCorrectLineUser = () => {
-    const correctLineUserIDs = [
-      process.env.NEXT_PUBLIC_MY_LINE_USER_ID!,
-      process.env.NEXT_PUBLIC_JONA_LINE_USER_ID!,
-    ];
-    if (!user) return false;
-
-    return correctLineUserIDs.includes(user.userId);
-  };
-
   const onSubmit: SubmitHandler<Inputs> = async ({ genre, amount }) => {
     if (!liff || !user) {
       showError({
         message: "まずは右上のアイコンボタンからログインしようか！！！",
       });
-      return;
-    }
-    if (!isCorrectLineUser()) {
-      showError({ message: "LINEアカウントが違います" });
       return;
     }
 
