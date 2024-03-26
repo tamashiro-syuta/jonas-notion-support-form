@@ -6,6 +6,7 @@ import { useLiff } from "@/components/custom/LiffProvider";
 import { Profile } from "@liff/get-profile";
 import { Button } from "@/components/ui/button";
 import { showError, showSuccess } from "@/lib/toast-actions";
+import { sendMessage } from "../actions/sendMessage";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -26,20 +27,11 @@ export default function Page() {
     if (liff) {
       try {
         const userID = user?.userId;
-        const res = await fetch(`${window.location.origin}/api/lineBot`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: "こんにちは！",
-            userID,
-          }),
-        });
+        if (!userID) throw new Error("ユーザーIDが取得できません");
 
-        res.status > 400
-          ? showSuccess({ message: "メッセージを送信しました" })
-          : showError({ message: "失敗しました", duration: 5000 });
+        await sendMessage({ message: "Hello, World!", userID });
+
+        showSuccess({ message: "メッセージが送信されました" });
       } catch (error) {
         showError({
           message: `エラーが発生しました。${error}`,
