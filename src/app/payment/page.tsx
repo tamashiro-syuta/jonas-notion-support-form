@@ -9,6 +9,7 @@ import { Profile } from "@liff/get-profile";
 import { Inputs, schema } from "./zod";
 import Loading from "@/components/custom/Loading";
 import { showError, showSuccess } from "@/lib/toast-actions";
+import { sendMessage } from "../actions/sendMessage";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -69,15 +70,9 @@ export default function Page() {
         showError({ message: "エラーが発生しました" });
       } else {
         const message = `【支出の追加】\nカテゴリ: ${data.genre}\n金額: ${data.amount}円`;
-        await fetch(`${window.location.origin}/api/lineBot`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message,
-            userID: user.userId,
-          }),
+        await sendMessage({
+          message,
+          userID: user.userId,
         });
         await liff.closeWindow();
       }

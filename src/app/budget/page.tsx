@@ -4,6 +4,7 @@ import { useLiff } from "@/components/custom/LiffProvider";
 import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
+import { sendMessage } from "../actions/sendMessage";
 
 const serializeResponse = (objects: any[]) => {
   let messages = ["【カテゴリ別の予算】"];
@@ -31,15 +32,9 @@ export default function Page() {
       const data = await res.json();
       const user = await liff.getProfile();
 
-      await fetch(`${window.location.origin}/api/lineBot`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: serializeResponse(data).join("\n"),
-          userID: user.userId,
-        }),
+      await sendMessage({
+        message: serializeResponse(data).join("\n"),
+        userID: user.userId,
       });
 
       await liff.closeWindow();

@@ -9,7 +9,6 @@ interface Props {
 
 export async function sendMessage({ message, userID }: Props) {
   try {
-    console.log("exec on server");
     const userIDs = [
       process.env.NEXT_PUBLIC_MY_LINE_USER_ID,
       process.env.NEXT_PUBLIC_JONA_LINE_USER_ID,
