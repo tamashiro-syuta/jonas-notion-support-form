@@ -1,5 +1,5 @@
 import { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-import { notion } from "../notion-client";
+import { notion } from "./client";
 import { GENRE, ORDER, SPENDING } from "./constants";
 import { SpendingColumn } from "./types";
 

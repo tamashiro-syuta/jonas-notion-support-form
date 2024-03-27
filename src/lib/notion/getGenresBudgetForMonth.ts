@@ -1,4 +1,4 @@
-import { notion } from "../notion-client";
+import { notion } from "./client";
 import {
   DatabaseObjectResponse,
   PageObjectResponse,

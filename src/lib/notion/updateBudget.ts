@@ -1,4 +1,4 @@
-import { notion } from "../notion-client";
+import { notion } from "./client";
 import { SPENDING } from "./constants";
 
 // TODO: recordの型を指定する
