@@ -37,6 +37,9 @@ model Genre {
   notionDB     NotionDB @relation(fields: [notionDBId], references: [id])
   notionDBId   Int
   genre        String
+  isSpending   Boolean @default(false)
+  isBalance    Boolean @default(false)
+  isBudget     Boolean @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

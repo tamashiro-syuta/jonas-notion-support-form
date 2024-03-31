@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Genre" ADD COLUMN     "isBalance" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "isBudget" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "isSpending" BOOLEAN NOT NULL DEFAULT false;
