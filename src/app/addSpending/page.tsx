@@ -42,7 +42,7 @@ export default function Page() {
     }
 
     try {
-      await addSpending({ genre, amount });
+      await addSpending({ userID: user.userId, genre, amount });
 
       const message = `【支出の追加】\nカテゴリ: ${genre}\n金額: ${amount}円`;
       const userID = user.userId;
