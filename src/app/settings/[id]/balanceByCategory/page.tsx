@@ -20,6 +20,7 @@ import Loading from "@/components/custom/Loading";
 import { Switch } from "@/components/ui/switch";
 import { bulkUpdateGenres } from "@/app/actions/db/genre";
 import { showError, showSuccess } from "@/lib/toast-actions";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: {
@@ -28,6 +29,7 @@ interface Props {
 }
 
 const Page = ({ params: { id } }: Props) => {
+  const router = useRouter();
   const { user } = useLiff();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,21 +86,26 @@ const Page = ({ params: { id } }: Props) => {
   const fetch = useCallback(async () => {
     if (!user) return;
 
-    const genres = await fetchGenres({
-      userID: user.userId,
-      notionDBId: Number(id),
-    });
-    setGenres(genres);
-    setLoading(false);
+    try {
+      const genres = await fetchGenres({
+        userID: user.userId,
+        notionDBId: Number(id),
+      });
+      setGenres(genres);
+      setLoading(false);
 
-    form.reset(
-      genres.reduce((acc, genre, index) => {
-        if (index === 0) return { [genre.genre]: genre.isBalance };
-        return { ...acc, [genre.genre]: genre.isBalance };
-      }, {}),
-      {}
-    );
-  }, [form, id, user]);
+      form.reset(
+        genres.reduce((acc, genre, index) => {
+          if (index === 0) return { [genre.genre]: genre.isBalance };
+          return { ...acc, [genre.genre]: genre.isBalance };
+        }, {}),
+        {}
+      );
+    } catch (error) {
+      showError({ message: `${error}` });
+      router.push("/settings");
+    }
+  }, [form, id, router, user]);
 
   useEffect(() => {
     fetch();

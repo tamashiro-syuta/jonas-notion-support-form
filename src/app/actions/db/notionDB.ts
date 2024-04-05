@@ -1,9 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/db/client";
-import { loginUserGuard } from "./loginUserGuard";
 import { NotionDB } from "@prisma/client";
-import { Genre } from "@prisma/client";
+import { loginUserGuard } from "./guard";
 
 interface BaseProps {
   userID: string;

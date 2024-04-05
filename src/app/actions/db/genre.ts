@@ -1,14 +1,18 @@
 "use server";
 
 import { prisma } from "@/lib/db/client";
-import { loginUserGuard } from "./loginUserGuard";
 import { Genre } from "@prisma/client";
+import { correctNotionDBGuard, loginUserGuard } from "./guard";
 
 interface BaseProps {
   userID: string;
 }
 
 interface FetchProps extends BaseProps {
+  notionDBId: number;
+}
+
+interface BalancedFetchProps extends BaseProps {
   notionDBId: number;
 }
 
@@ -22,6 +26,7 @@ export async function fetchGenres({
 }: FetchProps): Promise<Genre[]> {
   try {
     await loginUserGuard(userID);
+    await correctNotionDBGuard(userID, notionDBId);
 
     return await prisma.genre.findMany({
       where: {

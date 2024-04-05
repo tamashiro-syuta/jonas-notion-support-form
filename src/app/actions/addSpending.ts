@@ -3,7 +3,7 @@
 import { NotionError } from "@/lib/Error";
 import getGenresBudgetForMonth from "@/lib/notion/getGenresBudgetForMonth";
 import updateBudget from "@/lib/notion/updateBudget";
-import { loginUserGuard } from "./db/loginUserGuard";
+import { loginUserGuard } from "./db/guard";
 
 interface Props {
   userID: string;
