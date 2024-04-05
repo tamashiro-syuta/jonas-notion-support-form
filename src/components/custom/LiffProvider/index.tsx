@@ -9,11 +9,13 @@ import React, {
   useState,
 } from "react";
 import { Liff } from "@line/liff";
+import { Profile } from "@line/bot-sdk";
 
 const LiffContext = createContext<{
   liff: Liff | null;
+  user: Profile | null;
   liffError: string | null;
-}>({ liff: null, liffError: null });
+}>({ liff: null, user: null, liffError: null });
 
 export const useLiff = () => useContext(LiffContext);
 
@@ -22,6 +24,7 @@ export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
   liffId,
 }) => {
   const [liff, setLiff] = useState<Liff | null>(null);
+  const [user, setUser] = useState<Profile | null>(null);
   const [liffError, setLiffError] = useState<string | null>(null);
 
   const initLiff = useCallback(async () => {
@@ -34,6 +37,10 @@ export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
 
       console.log("LIFF init succeeded.");
       setLiff(liff);
+
+      const user = await liff.getProfile();
+      setUser(user);
+      console.log("user setting succeeded.");
     } catch (error) {
       console.log("LIFF init failed.");
       setLiffError((error as Error).toString());
@@ -54,6 +61,7 @@ export const LiffProvider: FC<PropsWithChildren<{ liffId: string }>> = ({
     <LiffContext.Provider
       value={{
         liff,
+        user,
         liffError,
       }}
     >
