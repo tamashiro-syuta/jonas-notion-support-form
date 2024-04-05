@@ -43,22 +43,10 @@ export async function bulkUpdateGenres({
   try {
     await loginUserGuard(userID);
 
-    console.log("genres", genres);
-
     const dataList = genres.map((genre) => ({
       where: { id: genre.id },
       data: { isBalance: genre.isBalance },
     }));
-
-    const manyGenre = await prisma.genre.findMany({
-      where: {
-        id: {
-          in: genres.map((genre) => genre.id),
-        },
-      },
-    });
-
-    console.log("manyGenre", manyGenre);
 
     return await prisma.$transaction(
       dataList.map((data) => prisma.genre.update(data))
