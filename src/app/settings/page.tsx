@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -15,13 +14,48 @@ import { NotionDB } from "@prisma/client";
 import Loading from "@/components/custom/Loading";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { showError } from "@/lib/toast-actions";
+import Link from "next/link";
+
+interface MenuItemProps {
+  selectedNotionDBId: string | undefined;
+  targetFeatureName: string;
+  targetFeaturePath: string;
+}
+
+const MenuItem = ({
+  selectedNotionDBId,
+  targetFeatureName,
+  targetFeaturePath,
+}: MenuItemProps) => {
+  if (!selectedNotionDBId) {
+    return (
+      <Button
+        variant="outline"
+        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
+        onClick={() => showError({ message: "家計簿を選択してください" })}
+      >
+        {targetFeatureName} へ
+      </Button>
+    );
+  }
+
+  return (
+    <Link href={`/settings/${selectedNotionDBId}/${targetFeaturePath}`}>
+      <Button
+        variant="outline"
+        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
+      >
+        {targetFeatureName} へ
+      </Button>
+    </Link>
+  );
+};
 
 const Page = () => {
   const { user } = useLiff();
   const [notionDBs, setNotionDBs] = useState<NotionDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNotionDBId, setSelectedNotionDBId] = useState<string>();
-  const router = useRouter();
 
   const fetchNotionDBsCallback = useCallback(async () => {
     if (!user) return;
@@ -38,7 +72,7 @@ const Page = () => {
   if (loading) return <Loading />;
 
   return (
-    <div>
+    <div className="m-4">
       <Select onValueChange={setSelectedNotionDBId}>
         <SelectTrigger className="w-full my-2">
           <SelectValue placeholder="家計簿を選択" />
@@ -52,31 +86,23 @@ const Page = () => {
         </SelectContent>
       </Select>
 
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
-        onClick={() => {
-          if (!selectedNotionDBId)
-            return showError({ message: "家計簿を選択してください" });
+      <MenuItem
+        selectedNotionDBId={selectedNotionDBId}
+        targetFeatureName="支出の追加"
+        targetFeaturePath="addSpending"
+      />
 
-          router.push(`/settings/${selectedNotionDBId}/balanceByGenre`);
-        }}
-      >
-        項目別の予算 へ
-      </Button>
+      <MenuItem
+        selectedNotionDBId={selectedNotionDBId}
+        targetFeatureName="項目別の予算"
+        targetFeaturePath="balanceByGenre"
+      />
 
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
-        onClick={() => {
-          if (!selectedNotionDBId)
-            return showError({ message: "家計簿を選択してください" });
-
-          router.push(`/settings/${selectedNotionDBId}/totalBalance`);
-        }}
-      >
-        今月の残額 へ
-      </Button>
+      <MenuItem
+        selectedNotionDBId={selectedNotionDBId}
+        targetFeatureName="今月の残額"
+        targetFeaturePath="budgetByGenre"
+      />
     </div>
   );
 };
