@@ -50,7 +50,7 @@ const Page = ({ params: { id } }: Props) => {
     }, {}),
   });
 
-  // NOTE: ex) values === { "ジャンル名": true, "ジャンル名2": false }
+  // NOTE: ex) values === { "項目名": true, "項目名2": false }
   async function onSubmit(values: z.infer<typeof dynamicFormSchema>) {
     const changedGenres: Genre[] = [];
 

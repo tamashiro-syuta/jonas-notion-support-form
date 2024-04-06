@@ -58,7 +58,7 @@ interface Props {
   genreNames?: string[];
 }
 
-// NOTE: 実行時点でのカテゴリ別予算
+// NOTE: 実行時点での項目別予算
 export async function budgetByGenre({
   userID,
   notionId,

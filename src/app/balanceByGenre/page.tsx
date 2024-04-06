@@ -12,7 +12,7 @@ import { fetchDefaultNotionDB } from "../actions/db/notionDB";
 import { useRouter } from "next/navigation";
 
 const serializeResponse = (balances: BalanceColumn[]): string[] => {
-  let messages = ["【カテゴリ別の今月の残額】"];
+  let messages = ["【項目別の今月の残額】"];
 
   balances.forEach((balance) => {
     messages.push(`${balance.genre} : ${balance.balance.toLocaleString()}円`);

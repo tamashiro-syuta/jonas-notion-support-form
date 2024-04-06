@@ -62,7 +62,7 @@ const Page = () => {
           router.push(`/settings/${selectedNotionDBId}/balanceByGenre`);
         }}
       >
-        カテゴリ別の予算 へ
+        項目別の予算 へ
       </Button>
 
       <Button

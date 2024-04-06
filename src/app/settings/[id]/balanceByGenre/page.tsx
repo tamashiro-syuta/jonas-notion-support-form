@@ -50,7 +50,7 @@ const Page = ({ params: { id } }: Props) => {
     }, {}),
   });
 
-  // NOTE: ex) values === { "ジャンル名": true, "ジャンル名2": false }
+  // NOTE: ex) values === { "項目名": true, "項目名2": false }
   async function onSubmit(values: z.infer<typeof dynamicFormSchema>) {
     const changedGenres: Genre[] = [];
 
@@ -117,7 +117,7 @@ const Page = ({ params: { id } }: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 mx-2">
         <p className="text-lg mt-2 px-2 pt-2 font-bold w-full">
-          ジャンルごとの残高設定
+          項目ごとの残高設定
         </p>
         {genres.map((genre) => (
           <FormField

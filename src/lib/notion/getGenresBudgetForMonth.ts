@@ -19,7 +19,7 @@ export type Record =
   | PartialDatabaseObjectResponse
   | DatabaseObjectResponse;
 
-// NOTE: 指定の月 かつ ジャンルが 引数の値 のレコードを取得
+// NOTE: 指定の月 かつ 項目が 引数の値 のレコードを取得
 async function getGenresBudgetForMonth({
   genre,
   month,

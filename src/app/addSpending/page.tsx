@@ -74,7 +74,7 @@ export default function Page() {
       const notionId = db.id;
       await addSpending({ userID, notionId, genre, amount });
 
-      const message = `【支出の追加】\nカテゴリ: ${genre}\n金額: ${amount}円`;
+      const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;
       await sendMessage({ message, userID });
 
       await liff.closeWindow();

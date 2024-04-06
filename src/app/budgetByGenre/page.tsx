@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { fetchDefaultNotionDB } from "../actions/db/notionDB";
 
 const serializeResponse = (objects: Amount[]) => {
-  let messages = ["【カテゴリ別の予算】"];
+  let messages = ["【項目別の予算】"];
 
   objects.forEach((object) => {
     messages.push(`${object.genre} : ${object.amount.toLocaleString()}円`);

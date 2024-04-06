@@ -76,7 +76,7 @@ export default function Page({ params: { notionId } }: Props) {
         notionId: Number(notionId),
       });
 
-      const message = `【支出の追加】\nカテゴリ: ${genre}\n金額: ${amount}円`;
+      const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;
       const userID = user.userId;
       await sendMessage({ message, userID });
 

@@ -39,7 +39,7 @@ function AppBar() {
                     <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                       <ChevronRightIcon className="w-full h-full" />
                     </div>
-                    <span className="ms-3">カテゴリ別の予算</span>
+                    <span className="ms-3">項目別の予算</span>
                   </div>
                 </Link>
               </SheetClose>
@@ -73,7 +73,7 @@ function AppBar() {
                     <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                       <ChevronRightIcon className="w-full h-full" />
                     </div>
-                    <span className="ms-3">カテゴリ別の予算</span>
+                    <span className="ms-3">項目別の予算</span>
                   </div>
                 </Link>
               </SheetClose>
