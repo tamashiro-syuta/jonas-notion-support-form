@@ -18,7 +18,7 @@ import { Genre } from "@prisma/client";
 import { fetchGenres } from "@/app/actions/db/genre";
 import Loading from "@/components/custom/Loading";
 import { Switch } from "@/components/ui/switch";
-import { bulkUpdateIsBalance } from "@/app/actions/db/genre";
+import { bulkUpdateIsBudget } from "@/app/actions/db/genre";
 import { showError, showSuccess } from "@/lib/toast-actions";
 import { useRouter } from "next/navigation";
 
@@ -45,8 +45,8 @@ const Page = ({ params: { id } }: Props) => {
   const form = useForm<z.infer<typeof dynamicFormSchema>>({
     resolver: zodResolver(dynamicFormSchema),
     defaultValues: genres.reduce((acc, genre, index) => {
-      if (index === 0) return { [genre.genre]: genre.isBalance };
-      return { ...acc, [genre.genre]: genre.isBalance };
+      if (index === 0) return { [genre.genre]: genre.isBudget };
+      return { ...acc, [genre.genre]: genre.isBudget };
     }, {}),
   });
 
@@ -57,11 +57,11 @@ const Page = ({ params: { id } }: Props) => {
     for (const key in values) {
       const keysGenre = genres.filter((genre) => genre.genre === key)[0];
       const inputBalance = (values as any)[key];
-      const valueIsChanged = inputBalance !== keysGenre.isBalance;
+      const valueIsChanged = inputBalance !== keysGenre.isBudget;
 
       const newGenre: Genre = {
         ...keysGenre,
-        isBalance: inputBalance,
+        isBudget: inputBalance,
       };
 
       if (valueIsChanged) changedGenres.push(newGenre);
@@ -71,7 +71,7 @@ const Page = ({ params: { id } }: Props) => {
 
     try {
       setLoading(true);
-      await bulkUpdateIsBalance({
+      await bulkUpdateIsBudget({
         userID: user.userId,
         genres: changedGenres,
       });
@@ -96,8 +96,8 @@ const Page = ({ params: { id } }: Props) => {
 
       form.reset(
         genres.reduce((acc, genre, index) => {
-          if (index === 0) return { [genre.genre]: genre.isBalance };
-          return { ...acc, [genre.genre]: genre.isBalance };
+          if (index === 0) return { [genre.genre]: genre.isBudget };
+          return { ...acc, [genre.genre]: genre.isBudget };
         }, {}),
         {}
       );
@@ -117,7 +117,7 @@ const Page = ({ params: { id } }: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 mx-2">
         <p className="text-lg mt-2 px-2 pt-2 font-bold w-full">
-          ジャンルごとの残高設定
+          ジャンルごとの予算設定
         </p>
         {genres.map((genre) => (
           <FormField
@@ -130,7 +130,7 @@ const Page = ({ params: { id } }: Props) => {
                 <FormMessage />
                 <FormControl>
                   <Switch
-                    defaultChecked={genre.isBalance}
+                    defaultChecked={genre.isBudget}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />

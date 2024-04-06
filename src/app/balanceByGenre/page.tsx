@@ -3,7 +3,7 @@
 import { useLiff } from "@/components/custom/LiffProvider";
 import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { sendMessage } from "../actions/sendMessage";
 import { balanceByGenre } from "../actions/balanceByGenre";
 import { BalanceColumn } from "@/lib/notion/types";

@@ -24,7 +24,7 @@ interface BudgetFetchProps extends BaseProps {
   notionDBId: number;
 }
 
-interface BulkUpdateGenresProps extends BaseProps {
+interface BulkUpdateProps extends BaseProps {
   genres: Genre[];
 }
 
@@ -115,16 +115,56 @@ export async function fetchBudgetGenres({
   }
 }
 
-export async function bulkUpdateGenres({
+export async function bulkUpdateIsBalance({
   userID,
   genres,
-}: BulkUpdateGenresProps): Promise<Genre[]> {
+}: BulkUpdateProps): Promise<Genre[]> {
   try {
     await loginUserGuard(userID);
 
     const dataList = genres.map((genre) => ({
       where: { id: genre.id },
       data: { isBalance: genre.isBalance },
+    }));
+
+    return await prisma.$transaction(
+      dataList.map((data) => prisma.genre.update(data))
+    );
+  } catch (error) {
+    throw new Error(`取得に失敗しました, ${error}`);
+  }
+}
+
+export async function bulkUpdateIsSpending({
+  userID,
+  genres,
+}: BulkUpdateProps): Promise<Genre[]> {
+  try {
+    await loginUserGuard(userID);
+
+    const dataList = genres.map((genre) => ({
+      where: { id: genre.id },
+      data: { isSpending: genre.isSpending },
+    }));
+
+    return await prisma.$transaction(
+      dataList.map((data) => prisma.genre.update(data))
+    );
+  } catch (error) {
+    throw new Error(`取得に失敗しました, ${error}`);
+  }
+}
+
+export async function bulkUpdateIsBudget({
+  userID,
+  genres,
+}: BulkUpdateProps): Promise<Genre[]> {
+  try {
+    await loginUserGuard(userID);
+
+    const dataList = genres.map((genre) => ({
+      where: { id: genre.id },
+      data: { isBudget: genre.isBudget },
     }));
 
     return await prisma.$transaction(
