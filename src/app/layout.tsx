@@ -5,6 +5,7 @@ import { LiffProvider } from "@/components/custom/LiffProvider";
 import { cn } from "@/lib/utils";
 import AppBar from "@/components/custom/app-bar";
 import { Toaster } from "sonner";
+import { Breadcrumb } from "@/components/custom/breadcrumb";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,6 +32,9 @@ export default function RootLayout({
       >
         <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
           <AppBar />
+          <div className="px-2 pt-2">
+            <Breadcrumb />
+          </div>
 
           {children}
           <Toaster />
