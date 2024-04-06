@@ -32,11 +32,14 @@ export default function RootLayout({
       >
         <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
           <AppBar />
-          <div className="px-2 pt-2">
-            <Breadcrumb />
+          <div className="mx-4 my-2">
+            <div className="mb-2">
+              <Breadcrumb />
+            </div>
+
+            {children}
           </div>
 
-          {children}
           <Toaster />
         </LiffProvider>
       </body>

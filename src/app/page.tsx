@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -15,13 +14,56 @@ import Loading from "@/components/custom/Loading";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { showError } from "@/lib/toast-actions";
 import { fetchNotionDBs } from "./actions/db/notionDB";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
+import { GearIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
+
+interface MenuItemProps {
+  selectedNotionDBId: string | undefined;
+  targetFeatureName: string;
+  targetFeaturePath: string;
+  isSettings?: boolean;
+}
+
+const MenuItem = ({
+  selectedNotionDBId,
+  targetFeatureName,
+  targetFeaturePath,
+  isSettings = false,
+}: MenuItemProps) => {
+  if (!selectedNotionDBId) {
+    return (
+      <Button
+        variant="outline"
+        className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
+        onClick={() => showError({ message: "家計簿を選択してください" })}
+      >
+        {targetFeatureName} へ
+      </Button>
+    );
+  }
+
+  const href = isSettings
+    ? `/settings/${selectedNotionDBId}/${targetFeaturePath}`
+    : `/${selectedNotionDBId}/${targetFeaturePath}`;
+
+  return (
+    <Link href={href}>
+      <Button
+        variant="outline"
+        className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
+      >
+        {targetFeatureName} へ
+      </Button>
+    </Link>
+  );
+};
 
 const Page = () => {
   const { user } = useLiff();
   const [notionDBs, setNotionDBs] = useState<NotionDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNotionDBId, setSelectedNotionDBId] = useState<string>();
-  const router = useRouter();
 
   const fetchNotionDBsCallback = useCallback(async () => {
     if (!user) return;
@@ -52,31 +94,58 @@ const Page = () => {
         </SelectContent>
       </Select>
 
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
-        onClick={() => {
-          if (!selectedNotionDBId)
-            return showError({ message: "家計簿を選択してください" });
+      <div>
+        <div className="flex items-center mt-6">
+          <PaperPlaneIcon className="h-4 w-4" />
+          <h2 className="pl-2 text-xl text-left py-1">LINE通知</h2>
+        </div>
+        <Separator className="mb-2" />
+        <MenuItem
+          selectedNotionDBId={selectedNotionDBId}
+          targetFeatureName="支出の追加"
+          targetFeaturePath="addSpending"
+        />
 
-          router.push(`/settings/${selectedNotionDBId}/balanceByGenre`);
-        }}
-      >
-        項目別の予算 へ
-      </Button>
+        <MenuItem
+          selectedNotionDBId={selectedNotionDBId}
+          targetFeatureName="項目別の予算"
+          targetFeaturePath="balanceByGenre"
+        />
 
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
-        onClick={() => {
-          if (!selectedNotionDBId)
-            return showError({ message: "家計簿を選択してください" });
+        <MenuItem
+          selectedNotionDBId={selectedNotionDBId}
+          targetFeatureName="今月の残額"
+          targetFeaturePath="budgetByGenre"
+        />
+      </div>
 
-          router.push(`/settings/${selectedNotionDBId}/totalBalance`);
-        }}
-      >
-        今月の残額 へ
-      </Button>
+      <div>
+        <div className="flex items-center mt-6">
+          <GearIcon className="h-6 w-6" />
+          <h2 className="pl-1 text-xl text-left py-1">設定</h2>
+        </div>
+        <Separator className="mb-2" />
+        <MenuItem
+          selectedNotionDBId={selectedNotionDBId}
+          targetFeatureName="支出の追加"
+          targetFeaturePath="addSpending"
+          isSettings
+        />
+
+        <MenuItem
+          selectedNotionDBId={selectedNotionDBId}
+          targetFeatureName="項目別の予算"
+          targetFeaturePath="balanceByGenre"
+          isSettings
+        />
+
+        <MenuItem
+          selectedNotionDBId={selectedNotionDBId}
+          targetFeatureName="今月の残額"
+          targetFeaturePath="budgetByGenre"
+          isSettings
+        />
+      </div>
     </div>
   );
 };

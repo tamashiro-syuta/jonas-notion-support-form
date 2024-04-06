@@ -7,8 +7,13 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ChevronRightIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import {
+  ChevronRightIcon,
+  HamburgerMenuIcon,
+  PaperPlaneIcon,
+} from "@radix-ui/react-icons";
 import Link from "next/link";
+import { GearIcon } from "@radix-ui/react-icons";
 
 function AppBar() {
   return (
@@ -21,7 +26,10 @@ function AppBar() {
             </SheetTrigger>
             <SheetContent side="left">
               <SheetHeader className="mt-6 text-xl text-left px-2 py-1 mb-1 border-l-4">
-                LINE通知
+                <div className="flex items-center">
+                  <PaperPlaneIcon className="h-6 w-6" />
+                  <h2 className="pl-2 text-xl text-left">LINE通知</h2>
+                </div>
               </SheetHeader>
               <SheetClose asChild>
                 <Link href={"/addSpending"}>
@@ -55,7 +63,10 @@ function AppBar() {
               </SheetClose>
 
               <SheetHeader className="mt-6 text-xl text-left px-2 py-1 mb-1 border-l-4">
-                設定
+                <div className="flex items-center">
+                  <GearIcon className="h-6 w-6" />
+                  <h2 className="pl-2 text-xl text-left">設定</h2>
+                </div>
               </SheetHeader>
               <SheetClose asChild>
                 <Link href={"/settings"}>
