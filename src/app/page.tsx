@@ -29,8 +29,6 @@ const Page = () => {
     const notionDBs = await fetchNotionDBs({ userID: user?.userId || "" });
     setNotionDBs(notionDBs);
     setLoading(false);
-
-    console.log(notionDBs);
   }, [user]);
 
   useEffect(() => {

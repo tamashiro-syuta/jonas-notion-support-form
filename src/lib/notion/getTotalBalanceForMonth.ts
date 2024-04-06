@@ -33,8 +33,6 @@ async function getTotalBalanceForMonth({
     return Number(balance.formula.number);
   });
 
-  console.log(balances.reduce((acc, cur) => acc + cur, 0));
-
   return balances.reduce((acc, cur) => acc + cur, 0);
 }
 
