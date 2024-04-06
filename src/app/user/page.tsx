@@ -1,25 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useLiff } from "@/components/custom/LiffProvider";
-import { Profile } from "@liff/get-profile";
 import { Button } from "@/components/ui/button";
 import { showError, showSuccess } from "@/lib/toast-actions";
 import { sendMessage } from "../actions/sendMessage";
 
 export default function Page() {
-  const { liff } = useLiff();
-  const [user, setUser] = useState<Profile | null>(null);
-
-  useEffect(() => {
-    if (liff) {
-      (async () => {
-        const user = await liff.getProfile();
-        setUser(user);
-      })();
-    }
-  }, [liff]);
+  const { liff, user } = useLiff();
 
   const handleClick = async () => {
     if (liff) {

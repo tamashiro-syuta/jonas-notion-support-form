@@ -30,6 +30,7 @@ model NotionDB {
   databaseName         String? @unique
   displayDatabaseName  String?
   genres               Genre[]
+  isDefault            Boolean @default(false)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }

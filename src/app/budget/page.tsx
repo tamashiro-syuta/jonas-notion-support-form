@@ -6,6 +6,8 @@ import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../actions/sendMessage";
 import { Amount, budgetByGenre } from "../actions/budgetByGenre";
+import { useRouter } from "next/navigation";
+import { fetchDefaultNotionDB } from "../actions/db/notionDB";
 
 const serializeResponse = (objects: Amount[]) => {
   let messages = ["【カテゴリ別の予算】"];
@@ -18,33 +20,29 @@ const serializeResponse = (objects: Amount[]) => {
 };
 
 export default function Page() {
+  const router = useRouter();
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
     if (!liff || !user) {
-      showError({
-        message: "まずは右上のアイコンボタンからログインしようか！！！",
-      });
+      const message = "まずは右上のアイコンボタンからログインしようか";
+      showError({ message });
       return;
     }
 
     try {
-      const data = await budgetByGenre({
-        userID: user.userId,
-        // TODO: あとでdefaultのnotionIdに変更する
-        notionId: 1,
-      });
+      const userID = user.userId;
+      const db = await fetchDefaultNotionDB({ userID });
+      const data = await budgetByGenre({ userID, notionId: db.id });
+      const message = serializeResponse(data).join("\n");
 
-      await sendMessage({
-        message: serializeResponse(data).join("\n"),
-        userID: user.userId,
-      });
-
+      await sendMessage({ message, userID });
       await liff.closeWindow();
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
+      router.push("/");
     }
-  }, [liff, user]);
+  }, [liff, router, user]);
 
   useEffect(() => {
     fetchAndSendBudget();

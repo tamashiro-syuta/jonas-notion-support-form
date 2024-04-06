@@ -25,3 +25,20 @@ export async function fetchNotionDBs({
     throw new Error(`取得に失敗しました, ${error}`);
   }
 }
+
+export async function fetchDefaultNotionDB({
+  userID,
+}: FetchProps): Promise<NotionDB> {
+  try {
+    const user = await loginUserGuard(userID);
+
+    return await prisma.notionDB.findFirstOrThrow({
+      where: {
+        userId: user.id,
+        isDefault: true,
+      },
+    });
+  } catch (error) {
+    throw new Error(`取得に失敗しました, ${error}`);
+  }
+}

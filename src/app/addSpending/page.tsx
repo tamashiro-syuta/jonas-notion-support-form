@@ -1,29 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { clsx } from "clsx";
 import { useLiff } from "@/components/custom/LiffProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Profile } from "@liff/get-profile";
 import { Inputs, schema } from "./zod";
 import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { sendMessage } from "../actions/sendMessage";
 import { addSpending } from "../actions/addSpending";
+import { fetchDefaultNotionDB } from "../actions/db/notionDB";
+import { Genre, NotionDB } from "@prisma/client";
+import { fetchSpendingGenres } from "../actions/db/genre";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const { liff } = useLiff();
-  const [user, setUser] = useState<Profile | null>(null);
+  const router = useRouter();
+  const { liff, user } = useLiff();
+  const [db, setDb] = useState<NotionDB | null>(null);
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAndSetBudget = useCallback(async () => {
+    if (!liff || !user) {
+      const message = "まずは右上のアイコンボタンからログインしようか";
+      showError({ message });
+      return;
+    }
+
+    try {
+      const db = await fetchDefaultNotionDB({ userID: user.userId });
+      const genres = await fetchSpendingGenres({
+        userID: user.userId,
+        notionDBId: Number(db.id),
+      });
+
+      setDb(db);
+      setGenres(genres);
+      setLoading(false);
+    } catch (error) {
+      showError({ message: `${error}`, duration: 50000 });
+      router.push("/");
+    }
+  }, [liff, router, user]);
 
   useEffect(() => {
-    if (liff) {
-      (async () => {
-        const user = await liff.getProfile();
-        setUser(user);
-      })();
-    }
-  }, [liff]);
+    fetchAndSetBudget();
+  }, [fetchAndSetBudget]);
 
   const {
     register,
@@ -35,23 +59,22 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ genre, amount }) => {
     if (!liff || !user) {
-      showError({
-        message: "まずは右上のアイコンボタンからログインしようか！！！",
-      });
+      const message = "まずは右上のアイコンボタンからログインしようか";
+      showError({ message });
+      return;
+    }
+    if (!db) {
+      const message = "DBが見つかりませんでした。管理者に連絡してください。";
+      showError({ message });
       return;
     }
 
     try {
-      await addSpending({
-        userID: user.userId,
-        // TODO: あとでdefaultのnotionIdに変更する
-        notionId: 1,
-        genre,
-        amount,
-      });
+      const userID = user.userId;
+      const notionId = db.id;
+      await addSpending({ userID, notionId, genre, amount });
 
       const message = `【支出の追加】\nカテゴリ: ${genre}\n金額: ${amount}円`;
-      const userID = user.userId;
       await sendMessage({ message, userID });
 
       await liff.closeWindow();
@@ -59,6 +82,8 @@ export default function Page() {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="w-full max-w-sm">
@@ -82,9 +107,11 @@ export default function Page() {
             {...register("genre")}
           >
             <option value="">-- 選択してください --</option>
-            <option value="食費">食費</option>
-            <option value="日用品">日用品</option>
-            <option value="エンタメ">エンタメ</option>
+            {genres.map((genre) => (
+              <option key={genre.id} value={genre.genre}>
+                {genre.genre}
+              </option>
+            ))}
           </select>
           {errors.genre && (
             <p className="text-red-500 text-xs italic my-1">
