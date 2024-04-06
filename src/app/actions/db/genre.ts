@@ -12,7 +12,15 @@ interface FetchProps extends BaseProps {
   notionDBId: number;
 }
 
+interface SpendingFetchProps extends BaseProps {
+  notionDBId: number;
+}
+
 interface BalancedFetchProps extends BaseProps {
+  notionDBId: number;
+}
+
+interface BudgetFetchProps extends BaseProps {
   notionDBId: number;
 }
 
@@ -31,6 +39,72 @@ export async function fetchGenres({
     return await prisma.genre.findMany({
       where: {
         notionDBId,
+      },
+      orderBy: {
+        orderNumber: "asc",
+      },
+    });
+  } catch (error) {
+    throw new Error(`取得に失敗しました, ${error}`);
+  }
+}
+
+export async function fetchSpendingGenres({
+  userID,
+  notionDBId,
+}: SpendingFetchProps): Promise<Genre[]> {
+  try {
+    await loginUserGuard(userID);
+    await correctNotionDBGuard(userID, notionDBId);
+
+    return await prisma.genre.findMany({
+      where: {
+        notionDBId,
+        isSpending: true,
+      },
+      orderBy: {
+        orderNumber: "asc",
+      },
+    });
+  } catch (error) {
+    throw new Error(`取得に失敗しました, ${error}`);
+  }
+}
+
+export async function fetchBalancedGenres({
+  userID,
+  notionDBId,
+}: BalancedFetchProps): Promise<Genre[]> {
+  try {
+    await loginUserGuard(userID);
+    await correctNotionDBGuard(userID, notionDBId);
+
+    return await prisma.genre.findMany({
+      where: {
+        notionDBId,
+        isBalance: true,
+      },
+      orderBy: {
+        orderNumber: "asc",
+      },
+    });
+  } catch (error) {
+    throw new Error(`取得に失敗しました, ${error}`);
+  }
+}
+
+export async function fetchBudgetGenres({
+  userID,
+  notionDBId,
+}: BudgetFetchProps): Promise<Genre[]> {
+  try {
+    await loginUserGuard(userID);
+    await correctNotionDBGuard(userID, notionDBId);
+
+    return await prisma.genre.findMany({
+      where: {
+        notionDBId,
+        isBudget: true,
       },
       orderBy: {
         orderNumber: "asc",

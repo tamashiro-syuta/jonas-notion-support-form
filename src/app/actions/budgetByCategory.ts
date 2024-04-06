@@ -52,7 +52,9 @@ function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
 }
 
 // NOTE: 実行時点でのカテゴリ別予算
-export async function budgetByCategory(): Promise<Amount[]> {
+export async function budgetByCategory(
+  genreNames?: string[]
+): Promise<Amount[]> {
   try {
     const thisMonth = new Date().getMonth() + 1;
     const thisMonthBudget = await getBudgetForMonth({ month: thisMonth });
@@ -65,6 +67,14 @@ export async function budgetByCategory(): Promise<Amount[]> {
 
     const necessaryAmounts = excludeUnnecessaryGenres(amountCanSpendThisMonth);
     const sortedAmounts = necessaryAmounts.sort((a, b) => a.order - b.order);
+
+    if (genreNames) {
+      const filteredAmounts = sortedAmounts.filter((amount) => {
+        return genreNames.includes(amount.genre);
+      });
+
+      return filteredAmounts.sort((a, b) => a.order - b.order);
+    }
 
     return sortedAmounts;
   } catch (error) {
