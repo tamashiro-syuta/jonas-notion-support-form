@@ -115,14 +115,17 @@ const Page = ({ params: { id } }: Props) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 mx-2">
+        <p className="text-lg mt-2 px-2 pt-2 font-bold w-full">
+          ジャンルごとの残高設定
+        </p>
         {genres.map((genre) => (
           <FormField
             key={genre.id}
             control={form.control}
             name={genre.genre as never}
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between p-3">
+              <FormItem className="flex flex-row items-center justify-between md:p-3 py-1 px-3">
                 <FormLabel>{genre.genre}</FormLabel>
                 <FormMessage />
                 <FormControl>

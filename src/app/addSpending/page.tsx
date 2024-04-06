@@ -42,7 +42,13 @@ export default function Page() {
     }
 
     try {
-      await addSpending({ userID: user.userId, genre, amount });
+      await addSpending({
+        userID: user.userId,
+        // TODO: あとでdefaultのnotionIdに変更する
+        notionId: 1,
+        genre,
+        amount,
+      });
 
       const message = `【支出の追加】\nカテゴリ: ${genre}\n金額: ${amount}円`;
       const userID = user.userId;

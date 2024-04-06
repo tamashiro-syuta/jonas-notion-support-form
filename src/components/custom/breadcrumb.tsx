@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 
 const CUSTOM_I18_PATH_LIST = [
   { en: "addSpending", ja: "支出の追加" },
-  { en: "balanceByCategory", ja: "カテゴリ別 残高" },
+  { en: "balanceByGenre", ja: "カテゴリ別 残高" },
   { en: "totalBalance", ja: "合計残高" },
   { en: "budget", ja: "予算" },
   { en: "user", ja: "アカウント" },

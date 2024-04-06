@@ -5,13 +5,15 @@ import { SpendingColumn } from "./types";
 
 type Props = {
   month: number;
+  notionDBDatabaseId: string;
 };
 
 async function getSpendingForMonth({
   month,
+  notionDBDatabaseId,
 }: Props): Promise<SpendingColumn[]> {
   const data = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: notionDBDatabaseId,
     filter: {
       and: [
         {

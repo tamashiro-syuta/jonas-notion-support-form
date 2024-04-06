@@ -10,6 +10,7 @@ import { NotionError } from "@/lib/Error";
 type Props = {
   genre: string;
   month: number;
+  notionDBDatabaseId: string;
 };
 
 export type Record =
@@ -22,10 +23,11 @@ export type Record =
 async function getGenresBudgetForMonth({
   genre,
   month,
+  notionDBDatabaseId,
 }: Props): Promise<Record> {
   try {
     const budget = await notion.databases.query({
-      database_id: process.env.NOTION_DATABASE_ID!,
+      database_id: notionDBDatabaseId,
       filter: {
         and: [
           {

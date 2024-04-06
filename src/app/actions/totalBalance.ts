@@ -16,7 +16,7 @@ export async function totalBalance({ userID, notionDBId }: Props) {
     const thisMonth = new Date().getMonth() + 1;
     return await getTotalBalanceForMonth({
       month: thisMonth,
-      notionDBId: db.databaseId,
+      notionDBDatabaseId: db.databaseId,
     });
   } catch (error) {
     throw new Error("取得に失敗しました");

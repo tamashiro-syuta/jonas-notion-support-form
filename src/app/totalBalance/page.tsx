@@ -12,10 +12,10 @@ const serializeResponse = (amount: number): string => {
 };
 
 export default function Page() {
-  const { liff } = useLiff();
+  const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
-    if (!liff) {
+    if (!liff || !user) {
       showError({
         message: "まずは右上のアイコンボタンからログインしようか！！！",
       });
@@ -23,8 +23,11 @@ export default function Page() {
     }
 
     try {
-      const amount = await totalBalance();
-      const user = await liff.getProfile();
+      const amount = await totalBalance({
+        userID: user.userId,
+        // TODO: あとでdefaultのnotionIdに変更する
+        notionDBId: 1,
+      });
 
       await sendMessage({
         message: serializeResponse(amount),
@@ -34,7 +37,7 @@ export default function Page() {
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
-  }, [liff]);
+  }, [liff, user]);
 
   useEffect(() => {
     fetchAndSendBudget();

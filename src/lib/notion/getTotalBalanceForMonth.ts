@@ -4,11 +4,15 @@ import { BALANCE } from "./constants";
 
 type Props = {
   month: number;
+  notionDBDatabaseId: string;
 };
 
-async function getTotalBalanceForMonth({ month }: Props): Promise<number> {
+async function getTotalBalanceForMonth({
+  month,
+  notionDBDatabaseId,
+}: Props): Promise<number> {
   const data = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: notionDBDatabaseId,
     filter: {
       and: [
         {

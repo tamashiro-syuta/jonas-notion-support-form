@@ -5,7 +5,7 @@ import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../../actions/sendMessage";
-import { balanceByCategory } from "../../actions/balanceByCategory";
+import { balanceByGenre } from "../../actions/balanceByGenre";
 import { BalanceColumn } from "@/lib/notion/types";
 import { fetchBalancedGenres } from "../../actions/db/genre";
 
@@ -43,7 +43,11 @@ export default function Page({ params: { notionId } }: Props) {
       });
 
       const genreNames = genres.map((genre) => genre.genre);
-      const balances = await balanceByCategory(genreNames);
+      const balances = await balanceByGenre({
+        userID: user.userId,
+        notionId: Number(notionId),
+        genreNames,
+      });
 
       await sendMessage({
         message: serializeResponse(balances).join("\n"),

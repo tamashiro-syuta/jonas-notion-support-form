@@ -9,6 +9,7 @@ import {
 import getBudgetForMonth from "@/lib/notion/getBudgetForMonth";
 import getSpendingForMonth from "@/lib/notion/getSpendingForMonth";
 import { BaseColumn, BudgetColumn, SpendingColumn } from "@/lib/notion/types";
+import { correctNotionDBGuard, loginUserGuard } from "./db/guard";
 
 export interface Amount extends BaseColumn {
   amount: number;
@@ -51,15 +52,32 @@ function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
   });
 }
 
-// NOTE: 実行時点でのカテゴリ別予算
-export async function budgetByCategory(
-  genreNames?: string[]
-): Promise<Amount[]> {
-  try {
-    const thisMonth = new Date().getMonth() + 1;
-    const thisMonthBudget = await getBudgetForMonth({ month: thisMonth });
+interface Props {
+  userID: string;
+  notionId: number;
+  genreNames?: string[];
+}
 
-    const thisMonthSpending = await getSpendingForMonth({ month: thisMonth });
+// NOTE: 実行時点でのカテゴリ別予算
+export async function budgetByGenre({
+  userID,
+  notionId,
+  genreNames,
+}: Props): Promise<Amount[]> {
+  try {
+    await loginUserGuard(userID);
+    const db = await correctNotionDBGuard(userID, notionId);
+
+    const thisMonth = new Date().getMonth() + 1;
+    const thisMonthBudget = await getBudgetForMonth({
+      month: thisMonth,
+      notionDBDatabaseId: db.databaseId,
+    });
+
+    const thisMonthSpending = await getSpendingForMonth({
+      month: thisMonth,
+      notionDBDatabaseId: db.databaseId,
+    });
     const amountCanSpendThisMonth = calcAmountCanSpendThisMonth({
       thisMonthBudget,
       thisMonthSpending,

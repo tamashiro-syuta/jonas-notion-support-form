@@ -5,11 +5,15 @@ import { BudgetColumn } from "./types";
 
 type Props = {
   month: number;
+  notionDBDatabaseId: string;
 };
 
-async function getBalanceForMonth({ month }: Props): Promise<BudgetColumn[]> {
+async function getBalanceForMonth({
+  month,
+  notionDBDatabaseId,
+}: Props): Promise<BudgetColumn[]> {
   const data = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: notionDBDatabaseId,
     filter: {
       and: [
         {

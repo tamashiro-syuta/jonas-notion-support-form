@@ -5,7 +5,7 @@ import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../actions/sendMessage";
-import { Amount, budgetByCategory } from "../actions/budgetByCategory";
+import { Amount, budgetByGenre } from "../actions/budgetByGenre";
 
 const serializeResponse = (objects: Amount[]) => {
   let messages = ["【カテゴリ別の予算】"];
@@ -18,10 +18,10 @@ const serializeResponse = (objects: Amount[]) => {
 };
 
 export default function Page() {
-  const { liff } = useLiff();
+  const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
-    if (!liff) {
+    if (!liff || !user) {
       showError({
         message: "まずは右上のアイコンボタンからログインしようか！！！",
       });
@@ -29,8 +29,11 @@ export default function Page() {
     }
 
     try {
-      const data = await budgetByCategory();
-      const user = await liff.getProfile();
+      const data = await budgetByGenre({
+        userID: user.userId,
+        // TODO: あとでdefaultのnotionIdに変更する
+        notionId: 1,
+      });
 
       await sendMessage({
         message: serializeResponse(data).join("\n"),
@@ -41,7 +44,7 @@ export default function Page() {
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
-  }, [liff]);
+  }, [liff, user]);
 
   useEffect(() => {
     fetchAndSendBudget();

@@ -7,7 +7,6 @@ import { Profile } from "@liff/get-profile";
 import { Button } from "@/components/ui/button";
 import { showError, showSuccess } from "@/lib/toast-actions";
 import { sendMessage } from "../actions/sendMessage";
-import { test } from "../actions/db/test";
 
 export default function Page() {
   const { liff } = useLiff();
@@ -21,8 +20,6 @@ export default function Page() {
       })();
     }
   }, [liff]);
-
-  console.log("user", user);
 
   const handleClick = async () => {
     if (liff) {
@@ -68,13 +65,7 @@ export default function Page() {
 
       <Button onClick={handleClick}>メッセージ送信</Button>
 
-      <Button
-        onClick={async () => {
-          await test();
-        }}
-      >
-        Test
-      </Button>
+      <Button>Test</Button>
     </main>
   );
 }

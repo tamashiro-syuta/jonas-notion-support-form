@@ -37,12 +37,6 @@ const Page = () => {
     fetchNotionDBsCallback();
   }, [fetchNotionDBsCallback]);
 
-  // TODO: ユーザーが持つNotionDBの情報で、どの家計簿の設定を変更するか選ぶ
-
-  // TODO: URL設計
-  // TODO: どのページでもuserのvalidationを行う！！
-  // TODO: settings/:NotionDBId/balanceByCategory
-
   if (loading) return <Loading />;
 
   return (
@@ -67,7 +61,7 @@ const Page = () => {
           if (!selectedNotionDBId)
             return showError({ message: "家計簿を選択してください" });
 
-          router.push(`/settings/${selectedNotionDBId}/balanceByCategory`);
+          router.push(`/settings/${selectedNotionDBId}/balanceByGenre`);
         }}
       >
         カテゴリ別の予算 へ
