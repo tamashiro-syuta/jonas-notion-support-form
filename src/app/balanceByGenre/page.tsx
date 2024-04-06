@@ -8,8 +8,8 @@ import { sendMessage } from "../actions/sendMessage";
 import { balanceByGenre } from "../actions/balanceByGenre";
 import { BalanceColumn } from "@/lib/notion/types";
 import { fetchBalancedGenres } from "../actions/db/genre";
-import { useRouter } from "next/router";
 import { fetchDefaultNotionDB } from "../actions/db/notionDB";
+import { useRouter } from "next/navigation";
 
 const serializeResponse = (balances: BalanceColumn[]): string[] => {
   let messages = ["【カテゴリ別の今月の残額】"];
