@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,52 +11,14 @@ import {
 import { NotionDB } from "@prisma/client";
 import Loading from "@/components/custom/Loading";
 import { useLiff } from "@/components/custom/LiffProvider";
-import { showError } from "@/lib/toast-actions";
 import { fetchNotionDBs } from "./actions/db/notionDB";
-import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { GearIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
-
-interface MenuItemProps {
-  selectedNotionDBId: string | undefined;
-  targetFeatureName: string;
-  targetFeaturePath: string;
-  isSettings?: boolean;
-}
-
-const MenuItem = ({
-  selectedNotionDBId,
-  targetFeatureName,
-  targetFeaturePath,
-  isSettings = false,
-}: MenuItemProps) => {
-  if (!selectedNotionDBId) {
-    return (
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
-        onClick={() => showError({ message: "家計簿を選択してください" })}
-      >
-        {targetFeatureName} へ
-      </Button>
-    );
-  }
-
-  const href = isSettings
-    ? `/settings/${selectedNotionDBId}/${targetFeaturePath}`
-    : `/${selectedNotionDBId}/${targetFeaturePath}`;
-
-  return (
-    <Link href={href}>
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
-      >
-        {targetFeatureName} へ
-      </Button>
-    </Link>
-  );
-};
+import {
+  NotionLogoIcon,
+  GearIcon,
+  PaperPlaneIcon,
+} from "@radix-ui/react-icons";
+import MenuItem from "@/components/custom/menu-item";
 
 const Page = () => {
   const { user } = useLiff();
@@ -82,6 +43,12 @@ const Page = () => {
   return (
     <div>
       <Select onValueChange={setSelectedNotionDBId}>
+        <div className="flex items-center">
+          <NotionLogoIcon className="h-6 w-6" />
+          <h1 className="pl-1 text-xl text-left py-1">
+            家計簿を選択してください
+          </h1>
+        </div>
         <SelectTrigger className="w-full my-2">
           <SelectValue placeholder="家計簿を選択" />
         </SelectTrigger>
@@ -97,7 +64,7 @@ const Page = () => {
       <div>
         <div className="flex items-center mt-6">
           <PaperPlaneIcon className="h-4 w-4" />
-          <h2 className="pl-2 text-xl text-left py-1">LINE通知</h2>
+          <h1 className="pl-2 text-xl text-left py-1">LINE通知</h1>
         </div>
         <Separator className="mb-2" />
         <MenuItem
@@ -122,7 +89,7 @@ const Page = () => {
       <div>
         <div className="flex items-center mt-6">
           <GearIcon className="h-6 w-6" />
-          <h2 className="pl-1 text-xl text-left py-1">設定</h2>
+          <h1 className="pl-1 text-xl text-left py-1">設定</h1>
         </div>
         <Separator className="mb-2" />
         <MenuItem

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -13,43 +12,7 @@ import { fetchNotionDBs } from "../actions/db/notionDB";
 import { NotionDB } from "@prisma/client";
 import Loading from "@/components/custom/Loading";
 import { useLiff } from "@/components/custom/LiffProvider";
-import { showError } from "@/lib/toast-actions";
-import Link from "next/link";
-
-interface MenuItemProps {
-  selectedNotionDBId: string | undefined;
-  targetFeatureName: string;
-  targetFeaturePath: string;
-}
-
-const MenuItem = ({
-  selectedNotionDBId,
-  targetFeatureName,
-  targetFeaturePath,
-}: MenuItemProps) => {
-  if (!selectedNotionDBId) {
-    return (
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
-        onClick={() => showError({ message: "家計簿を選択してください" })}
-      >
-        {targetFeatureName} へ
-      </Button>
-    );
-  }
-
-  return (
-    <Link href={`/settings/${selectedNotionDBId}/${targetFeaturePath}`}>
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-24 hover:bg-gray-100 border-2 border-primary"
-      >
-        {targetFeatureName} へ
-      </Button>
-    </Link>
-  );
-};
+import MenuItem from "@/components/custom/menu-item";
 
 const Page = () => {
   const { user } = useLiff();
@@ -72,7 +35,7 @@ const Page = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="m-4">
+    <div>
       <Select onValueChange={setSelectedNotionDBId}>
         <SelectTrigger className="w-full my-2">
           <SelectValue placeholder="家計簿を選択" />
@@ -90,18 +53,21 @@ const Page = () => {
         selectedNotionDBId={selectedNotionDBId}
         targetFeatureName="支出の追加"
         targetFeaturePath="addSpending"
+        isSettings
       />
 
       <MenuItem
         selectedNotionDBId={selectedNotionDBId}
         targetFeatureName="項目別の予算"
         targetFeaturePath="balanceByGenre"
+        isSettings
       />
 
       <MenuItem
         selectedNotionDBId={selectedNotionDBId}
         targetFeatureName="今月の残額"
         targetFeaturePath="budgetByGenre"
+        isSettings
       />
     </div>
   );
