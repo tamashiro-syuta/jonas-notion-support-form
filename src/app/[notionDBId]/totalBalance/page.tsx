@@ -9,7 +9,7 @@ import { totalBalance } from "../../actions/totalBalance";
 
 interface Props {
   params: {
-    notionId: string;
+    notionDBId: string;
   };
 }
 
@@ -17,7 +17,7 @@ const serializeResponse = (amount: number): string => {
   return `【今月の合計残額】\n${amount.toLocaleString()}円`;
 };
 
-export default function Page({ params: { notionId } }: Props) {
+export default function Page({ params: { notionDBId } }: Props) {
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
@@ -31,7 +31,7 @@ export default function Page({ params: { notionId } }: Props) {
     try {
       const amount = await totalBalance({
         lineUserId: user.userId,
-        notionDBId: Number(notionId),
+        notionDBId: Number(notionDBId),
       });
 
       await sendMessage({
@@ -42,7 +42,7 @@ export default function Page({ params: { notionId } }: Props) {
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
-  }, [liff, notionId, user]);
+  }, [liff, notionDBId, user]);
 
   useEffect(() => {
     fetchAndSendBudget();

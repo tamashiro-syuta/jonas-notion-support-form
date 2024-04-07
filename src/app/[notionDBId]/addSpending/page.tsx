@@ -16,11 +16,11 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   params: {
-    notionId: string;
+    notionDBId: string;
   };
 }
 
-export default function Page({ params: { notionId } }: Props) {
+export default function Page({ params: { notionDBId } }: Props) {
   const router = useRouter();
   const { liff, user } = useLiff();
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -37,7 +37,7 @@ export default function Page({ params: { notionId } }: Props) {
     try {
       const genres = await fetchSpendingGenres({
         lineUserId: user.userId,
-        notionDBId: Number(notionId),
+        notionDBId: Number(notionDBId),
       });
 
       setGenres(genres);
@@ -46,7 +46,7 @@ export default function Page({ params: { notionId } }: Props) {
       showError({ message: `${error}` });
       router.push("/");
     }
-  }, [liff, notionId, router, user]);
+  }, [liff, notionDBId, router, user]);
 
   useEffect(() => {
     fetchAndSetBudget();
@@ -75,7 +75,7 @@ export default function Page({ params: { notionId } }: Props) {
         lineUserId,
         genre,
         amount,
-        notionDBId: Number(notionId),
+        notionDBId: Number(notionDBId),
       });
 
       const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;
