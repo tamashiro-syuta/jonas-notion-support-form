@@ -1,22 +1,18 @@
 "use server";
 
 import client from "@/lib/line-messaging-api/client";
+import { loginUserGuard } from "./db/guard";
 
 interface Props {
   message: string;
-  userID: string;
+  lineUserId: string;
 }
 
-export async function sendMessage({ message, userID }: Props) {
+export async function sendMessage({ message, lineUserId }: Props) {
   try {
-    const userIDs = [
-      process.env.MY_LINE_USER_ID,
-      process.env.JONA_LINE_USER_ID,
-    ];
+    loginUserGuard(lineUserId);
 
-    if (!userIDs.includes(userID)) throw new Error("ユーザーIDが不正です");
-
-    await client.pushMessage(userID, {
+    await client.pushMessage(lineUserId, {
       type: "text",
       text: message,
     });

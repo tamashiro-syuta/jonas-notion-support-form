@@ -36,7 +36,7 @@ export default function Page({ params: { notionId } }: Props) {
 
     try {
       const genres = await fetchSpendingGenres({
-        userID: user.userId,
+        lineUserId: user.userId,
         notionDBId: Number(notionId),
       });
 
@@ -69,16 +69,17 @@ export default function Page({ params: { notionId } }: Props) {
     }
 
     try {
+      const lineUserId = user.userId;
+
       await addSpending({
-        userID: user.userId,
+        lineUserId,
         genre,
         amount,
-        notionId: Number(notionId),
+        notionDBId: Number(notionId),
       });
 
       const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;
-      const userID = user.userId;
-      await sendMessage({ message, userID });
+      await sendMessage({ message, lineUserId });
 
       await liff.closeWindow();
     } catch (error) {

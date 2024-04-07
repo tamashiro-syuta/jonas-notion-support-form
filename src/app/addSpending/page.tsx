@@ -30,9 +30,9 @@ export default function Page() {
     }
 
     try {
-      const db = await fetchDefaultNotionDB({ userID: user.userId });
+      const db = await fetchDefaultNotionDB({ lineUserId: user.userId });
       const genres = await fetchSpendingGenres({
-        userID: user.userId,
+        lineUserId: user.userId,
         notionDBId: Number(db.id),
       });
 
@@ -70,12 +70,12 @@ export default function Page() {
     }
 
     try {
-      const userID = user.userId;
-      const notionId = db.id;
-      await addSpending({ userID, notionId, genre, amount });
+      const lineUserId = user.userId;
+      const notionDBId = db.id;
+      await addSpending({ lineUserId, notionDBId, genre, amount });
 
       const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;
-      await sendMessage({ message, userID });
+      await sendMessage({ message, lineUserId });
 
       await liff.closeWindow();
     } catch (error) {

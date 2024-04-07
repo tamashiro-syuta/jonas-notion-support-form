@@ -30,13 +30,13 @@ export default function Page({ params: { notionId } }: Props) {
 
     try {
       const amount = await totalBalance({
-        userID: user.userId,
+        lineUserId: user.userId,
         notionDBId: Number(notionId),
       });
 
       await sendMessage({
         message: serializeResponse(amount),
-        userID: user.userId,
+        lineUserId: user.userId,
       });
       await liff.closeWindow();
     } catch (error) {

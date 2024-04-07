@@ -25,12 +25,12 @@ export default function Page() {
     }
 
     try {
-      const userID = user.userId;
-      const db = await fetchDefaultNotionDB({ userID });
-      const amount = await totalBalance({ userID, notionDBId: db.id });
+      const lineUserId = user.userId;
+      const db = await fetchDefaultNotionDB({ lineUserId });
+      const amount = await totalBalance({ lineUserId, notionDBId: db.id });
 
       const message = serializeResponse(amount);
-      await sendMessage({ message, userID });
+      await sendMessage({ message, lineUserId });
       await liff.closeWindow();
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });

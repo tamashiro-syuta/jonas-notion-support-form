@@ -12,10 +12,10 @@ export default function Page() {
   const handleClick = async () => {
     if (liff) {
       try {
-        const userID = user?.userId;
-        if (!userID) throw new Error("ユーザーIDが取得できません");
+        const lineUserId = user?.userId;
+        if (!lineUserId) throw new Error("ユーザーIDが取得できません");
 
-        await sendMessage({ message: "Hello, World!", userID });
+        await sendMessage({ message: "Hello, World!", lineUserId });
 
         showSuccess({ message: "メッセージが送信されました" });
       } catch (error) {

@@ -1,25 +1,7 @@
-import { prisma } from "@/lib/db/client";
+export const loginUserGuard = (lineUserId: string) => {
+  // NOTE: 2人しか使わないので、DBに通信せず環境変数で弾くようにして、通信回数を減らす
+  if (lineUserId === process.env.MY_LINE_USER_ID) return;
+  if (lineUserId === process.env.JONA_LINE_USER_ID) return;
 
-export const loginUserGuard = async (userID: string) => {
-  const user = await prisma.user.findUnique({ where: { lineUserId: userID } });
-
-  if (user) return user;
   throw new Error("ユーザーIDが不正です");
-};
-
-export const correctNotionDBGuard = async (
-  userID: string,
-  notionDBId: number
-) => {
-  const user = await loginUserGuard(userID);
-  const db = await prisma.notionDB.findUnique({
-    where: {
-      id: notionDBId,
-      userId: user.id,
-    },
-  });
-
-  if (db) return db;
-
-  throw new Error("DBが不正です");
 };

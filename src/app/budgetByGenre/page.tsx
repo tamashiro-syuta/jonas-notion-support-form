@@ -31,12 +31,12 @@ export default function Page() {
     }
 
     try {
-      const userID = user.userId;
-      const db = await fetchDefaultNotionDB({ userID });
-      const data = await budgetByGenre({ userID, notionId: db.id });
+      const lineUserId = user.userId;
+      const db = await fetchDefaultNotionDB({ lineUserId });
+      const data = await budgetByGenre({ lineUserId, notionDBId: db.id });
       const message = serializeResponse(data).join("\n");
 
-      await sendMessage({ message, userID });
+      await sendMessage({ message, lineUserId });
       await liff.closeWindow();
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });

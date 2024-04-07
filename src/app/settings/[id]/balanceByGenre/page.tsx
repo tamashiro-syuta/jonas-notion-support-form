@@ -72,7 +72,7 @@ const Page = ({ params: { id } }: Props) => {
     try {
       setLoading(true);
       await bulkUpdateIsBalance({
-        userID: user.userId,
+        lineUserId: user.userId,
         genres: changedGenres,
       });
       showSuccess({ message: "更新しました" });
@@ -88,7 +88,7 @@ const Page = ({ params: { id } }: Props) => {
 
     try {
       const genres = await fetchGenres({
-        userID: user.userId,
+        lineUserId: user.userId,
         notionDBId: Number(id),
       });
       setGenres(genres);

@@ -3,21 +3,27 @@
 import { NotionError } from "@/lib/Error";
 import getGenresBudgetForMonth from "@/lib/notion/getGenresBudgetForMonth";
 import updateBudget from "@/lib/notion/updateBudget";
-import { correctNotionDBGuard, loginUserGuard } from "./db/guard";
+import { loginUserGuard } from "./db/guard";
+import { fetchNotionDBById } from "./db/notionDB";
 
 interface Props {
-  userID: string;
-  notionId: number;
+  lineUserId: string;
+  notionDBId: number;
   genre: string;
   amount: number;
 }
 
-export async function addSpending({ userID, genre, amount, notionId }: Props) {
+export async function addSpending({
+  lineUserId,
+  genre,
+  amount,
+  notionDBId,
+}: Props) {
   try {
     if (isNaN(amount)) throw new Error("金額に数字ではない値が検出されました");
 
-    await loginUserGuard(userID);
-    const db = await correctNotionDBGuard(userID, notionId);
+    loginUserGuard(lineUserId);
+    const db = await fetchNotionDBById({ lineUserId, notionDBId });
 
     // NOTE: new Date().getMonth() は 0 から始まるため、 +1 する
     const thisMonth = new Date().getMonth() + 1;

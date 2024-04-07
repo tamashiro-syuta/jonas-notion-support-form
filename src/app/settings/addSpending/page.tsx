@@ -19,7 +19,7 @@ const Page = () => {
     }
 
     try {
-      const db = await fetchDefaultNotionDB({ userID: user.userId });
+      const db = await fetchDefaultNotionDB({ lineUserId: user.userId });
 
       router.push(`/settings/${db.id}/addSpending`);
     } catch (error) {

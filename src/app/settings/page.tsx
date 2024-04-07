@@ -23,7 +23,7 @@ const Page = () => {
   const fetchNotionDBsCallback = useCallback(async () => {
     if (!user) return;
 
-    const notionDBs = await fetchNotionDBs({ userID: user?.userId || "" });
+    const notionDBs = await fetchNotionDBs({ lineUserId: user?.userId || "" });
     setNotionDBs(notionDBs);
     setLoading(false);
   }, [user]);
