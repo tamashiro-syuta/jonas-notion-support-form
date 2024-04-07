@@ -12,11 +12,7 @@ const Page = () => {
   const { liff, user } = useLiff();
 
   const fetchAndSetBudget = useCallback(async () => {
-    if (!liff || !user) {
-      const message = "まずは右上のアイコンボタンからログインしようか";
-      showError({ message });
-      return;
-    }
+    if (!liff || !user) return;
 
     try {
       const db = await fetchDefaultNotionDB({ lineUserId: user.userId });

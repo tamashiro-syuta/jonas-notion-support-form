@@ -27,12 +27,7 @@ export default function Page({ params: { notionDBId } }: Props) {
   const [loading, setLoading] = useState(true);
 
   const fetchAndSetBudget = useCallback(async () => {
-    if (!liff || !user) {
-      showError({
-        message: "まずは右上のアイコンボタンからログインしようか！！！",
-      });
-      return;
-    }
+    if (!liff || !user) return;
 
     try {
       const genres = await fetchSpendingGenres({
@@ -61,12 +56,7 @@ export default function Page({ params: { notionDBId } }: Props) {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async ({ genre, amount }) => {
-    if (!liff || !user) {
-      showError({
-        message: "まずは右上のアイコンボタンからログインしようか！！！",
-      });
-      return;
-    }
+    if (!liff || !user) return;
 
     try {
       const lineUserId = user.userId;

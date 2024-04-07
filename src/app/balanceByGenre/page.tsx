@@ -26,12 +26,7 @@ export default function Page() {
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
-    if (!liff || !user) {
-      showError({
-        message: "まずは右上のアイコンボタンからログインしようか！！！",
-      });
-      return;
-    }
+    if (!liff || !user) return;
 
     try {
       const lineUserId = user.userId;

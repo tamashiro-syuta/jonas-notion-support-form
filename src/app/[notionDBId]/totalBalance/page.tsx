@@ -21,12 +21,7 @@ export default function Page({ params: { notionDBId } }: Props) {
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
-    if (!liff || !user) {
-      showError({
-        message: "まずは右上のアイコンボタンからログインしようか！！！",
-      });
-      return;
-    }
+    if (!liff || !user) return;
 
     try {
       const amount = await totalBalance({

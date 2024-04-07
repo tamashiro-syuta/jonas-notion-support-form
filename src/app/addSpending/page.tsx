@@ -23,11 +23,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
 
   const fetchAndSetBudget = useCallback(async () => {
-    if (!liff || !user) {
-      const message = "まずは右上のアイコンボタンからログインしようか";
-      showError({ message });
-      return;
-    }
+    if (!liff || !user) return;
 
     try {
       const db = await fetchDefaultNotionDB({ lineUserId: user.userId });
@@ -58,11 +54,7 @@ export default function Page() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async ({ genre, amount }) => {
-    if (!liff || !user) {
-      const message = "まずは右上のアイコンボタンからログインしようか";
-      showError({ message });
-      return;
-    }
+    if (!liff || !user) return;
     if (!db) {
       const message = "DBが見つかりませんでした。管理者に連絡してください。";
       showError({ message });
