@@ -32,14 +32,13 @@ const MenuItem = ({
     : `/${selectedNotionDBId}/${targetFeaturePath}`;
 
   return (
-    <Link href={href}>
-      <Button
-        variant="outline"
-        className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
-      >
-        {targetFeatureName} へ
-      </Button>
-    </Link>
+    <Button
+      asChild
+      variant="link"
+      className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
+    >
+      <Link href={href}>{targetFeatureName} へ</Link>
+    </Button>
   );
 };
 
