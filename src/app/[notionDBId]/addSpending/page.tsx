@@ -90,10 +90,10 @@ export default function Page({ params: { notionDBId } }: Props) {
   if (loading) return <Loading />;
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full">
       {isSubmitting && <Loading />}
       <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-white rounded pt-2 mb-4"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="mb-4">
