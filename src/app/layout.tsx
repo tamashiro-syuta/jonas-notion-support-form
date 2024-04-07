@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import AppBar from "@/components/custom/app-bar";
 import { Toaster } from "sonner";
 import { Breadcrumb } from "@/components/custom/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,13 +33,11 @@ export default function RootLayout({
       >
         <LiffProvider liffId={process.env.NEXT_PUBLIC_LIFF_ID!}>
           <AppBar />
-          <div className="mx-4 my-2">
-            <div className="mb-2">
-              <Breadcrumb />
-            </div>
-
-            {children}
+          <div className="pb-1 mb-2">
+            <Breadcrumb className="px-4 py-2" />
+            <Separator className="w-full" />
           </div>
+          <div className="mx-4 my-2">{children}</div>
 
           <Toaster />
         </LiffProvider>

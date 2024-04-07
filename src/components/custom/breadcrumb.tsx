@@ -10,6 +10,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
+import clsx from "clsx";
+
+interface Props {
+  className?: string;
+}
 
 const CUSTOM_I18_PATH_LIST = [
   { en: "addSpending", ja: "支出の追加" },
@@ -21,7 +26,7 @@ const CUSTOM_I18_PATH_LIST = [
   { en: "settings", ja: "設定" },
 ];
 
-export function Breadcrumb() {
+export function Breadcrumb(props: Props) {
   const path = usePathname();
 
   const pathNames = path.split("/").filter((p) => p !== "");
@@ -53,7 +58,7 @@ export function Breadcrumb() {
   });
 
   return (
-    <BreadcrumbComponent>
+    <BreadcrumbComponent className={props.className}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">ホーム</BreadcrumbLink>
