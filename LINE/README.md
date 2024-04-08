@@ -19,7 +19,7 @@
 1. リッチメニュータップ時の処理をプロット
     ```bash
     curl -v -X POST https://api.line.me/v2/bot/richmenu \
-    -H 'Authorization: Bearer {ここに channel access token}'
+    -H 'Authorization: Bearer {ここに channel access token}' \
     -H 'Content-Type: application/json' \
     -d \
     '{
@@ -28,7 +28,7 @@
             "height": 540
         },
         "selected": true,
-        "name": "richmenu-individual-v〇〇",
+        "name": "richmenu-individual-v4",
         "chatBarText": "メニュー",
         "areas": [
             # TODO: ---------- タブ切り替え 部分 ----------
@@ -41,8 +41,8 @@
                 },
                 "action": {
                     "type": "richmenuswitch",
-                    "richMenuAliasId": "richmenu-alias-pairs-v〇〇",
-                    "data": "richmenu-changed-to-pairs-v〇〇"
+                    "richMenuAliasId": "richmenu-alias-pairs-v4",
+                    "data": "richmenu-changed-to-pairs-v4"
                 }
             },
             # TODO: ---------- 支出の記録 部分 ----------
@@ -94,7 +94,7 @@
                 },
                 "action": {
                     "type": "uri",
-                    "uri": "https://liff.line.me/{ ここに liff id }/INDIVIDUAL/settigns"
+                    "uri": "https://liff.line.me/{ ここに liff id }/INDIVIDUAL/settings"
                 }
             }
         ]
@@ -110,7 +110,7 @@
     - 画像のファイル名に変更があった場合は読み替える
     ```bash
     curl -v -X POST https://api-data.line.me/v2/bot/richmenu/richmenu-xxxxxx/content \
-    -H 'Authorization: Bearer {ここに channel access token}'
+    -H 'Authorization: Bearer {ここに channel access token}' \
     -H "Content-Type: image/png" \
     -T LINE/image/richmenu-individual.png
     ```
@@ -124,11 +124,11 @@
 5. リッチメニューのエイリアスを作成
     ```bash
     curl -v -X POST https://api.line.me/v2/bot/richmenu/alias \
-    -H 'Authorization: Bearer {ここに channel access token}'
+    -H 'Authorization: Bearer {ここに channel access token}' \
     -H 'Content-Type: application/json' \
     -d \
     '{
-        "richMenuAliasId": "richmenu-alias-individual-v〇〇",
+        "richMenuAliasId": "richmenu-alias-individual-v4",
         "richMenuId": "richmenu-xxxxxxx"
     }'
     ```
@@ -141,7 +141,7 @@
 1. リッチメニュータップ時の処理をプロット
     ```bash
     curl -v -X POST https://api.line.me/v2/bot/richmenu \
-    -H 'Authorization: Bearer {ここに channel access token}'
+    -H 'Authorization: Bearer {ここに channel access token}' \
     -H 'Content-Type: application/json' \
     -d \
     '{
@@ -150,7 +150,7 @@
             "height": 540
         },
         "selected": true,
-        "name": "richmenu-pairs-v〇〇",
+        "name": "richmenu-pairs-v4",
         "chatBarText": "メニュー",
         "areas": [
             # TODO: ---------- タブ切り替え 部分 ----------
@@ -163,8 +163,8 @@
                 },
                 "action": {
                     "type": "richmenuswitch",
-                    "richMenuAliasId": "richmenu-alias-individual-v〇〇",
-                    "data": "richmenu-changed-to-individual-v〇〇"
+                    "richMenuAliasId": "richmenu-alias-individual-v4",
+                    "data": "richmenu-changed-to-individual-v4"
                 }
             },
             # TODO: ---------- 支出の記録 部分 ----------
@@ -216,7 +216,7 @@
                 },
                 "action": {
                     "type": "uri",
-                    "uri": "https://liff.line.me/{ ここに liff id }/PAIRS/settigns"
+                    "uri": "https://liff.line.me/{ ここに liff id }/PAIRS/settings"
                 }
             }
         ]
@@ -232,7 +232,7 @@
     - 画像のファイル名に変更があった場合は読み替える
     ```bash
     curl -v -X POST https://api-data.line.me/v2/bot/richmenu/richmenu-xxxxxx/content \
-    -H 'Authorization: Bearer {ここに channel access token}'
+    -H 'Authorization: Bearer {ここに channel access token}' \
     -H "Content-Type: image/png" \
     -T LINE/image/richmenu-pairs.png
     ```
@@ -240,11 +240,11 @@
 4. リッチメニューのエイリアスを作成
     ```bash
     curl -v -X POST https://api.line.me/v2/bot/richmenu/alias \
-    -H 'Authorization: Bearer {ここに channel access token}'
+    -H 'Authorization: Bearer {ここに channel access token}' \
     -H 'Content-Type: application/json' \
     -d \
     '{
-        "richMenuAliasId": "richmenu-alias-pairs-v〇〇",
+        "richMenuAliasId": "richmenu-alias-pairs-v4",
         "richMenuId": "richmenu-xxxxxxx"
     }'
     ```
