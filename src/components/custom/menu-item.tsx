@@ -1,7 +1,6 @@
 import { showError } from "@/lib/toast-actions";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { HouseholdType } from "@prisma/client";
 
 interface MenuItemProps {
   householdType: string | undefined;
