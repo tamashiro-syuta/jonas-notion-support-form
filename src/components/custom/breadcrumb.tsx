@@ -10,13 +10,15 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
+import { HouseholdType } from "@prisma/client";
 
 interface Props {
   className?: string;
 }
 
 const CUSTOM_I18_PATH_LIST = [
+  { en: HouseholdType.INDIVIDUAL, ja: "個人家計簿" },
+  { en: HouseholdType.PAIRS, ja: "同棲家計簿" },
   { en: "addSpending", ja: "支出の追加" },
   { en: "balanceByGenre", ja: "項目別の残高" },
   { en: "budgetByGenre", ja: "項目別の予算" },
