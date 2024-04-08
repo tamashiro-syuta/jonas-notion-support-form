@@ -13,7 +13,7 @@ import {
   matchHouseholdType,
 } from "@/lib/db/matchHouseholdType";
 import { useRouter } from "next/navigation";
-import { BUDGET_BY_GENRE } from "@/lib/constants";
+import { BALANCE_BY_GENRE } from "@/lib/constants";
 
 interface Props {
   params: {
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const serializeResponse = (balances: BalanceColumn[]): string[] => {
-  let messages = [`【${BUDGET_BY_GENRE}】`];
+  let messages = [`【${BALANCE_BY_GENRE}】`];
 
   balances.forEach((balance) => {
     messages.push(`${balance.genre} : ${balance.balance.toLocaleString()}円`);
