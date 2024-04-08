@@ -6,12 +6,12 @@ import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../../actions/sendMessage";
 import { Amount, budgetByGenre } from "../../actions/budgetByGenre";
-import { fetchBalancedGenres, fetchBudgetGenres } from "@/app/actions/db/genre";
+import { fetchBudgetGenres } from "@/app/actions/db/genre";
 import {
   castHouseholdType,
   matchHouseholdType,
 } from "@/lib/db/matchHouseholdType";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: {
