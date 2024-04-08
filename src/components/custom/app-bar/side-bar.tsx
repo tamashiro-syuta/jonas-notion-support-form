@@ -74,7 +74,7 @@ export const SideBar = () => {
           )}
         >
           <div className="flex items-center">
-            <PaperPlaneIcon className="h-6 w-6" />
+            <PaperPlaneIcon className="h-5 w-5" />
             <h2 className="pl-2 text-xl text-left">LINE通知</h2>
           </div>
         </SheetHeader>
