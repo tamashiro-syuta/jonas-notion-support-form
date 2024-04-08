@@ -20,6 +20,7 @@ async function getBalanceForMonth({
           property: "月",
           select: {
             equals: `${month.toString()}月`,
+            // equals: "2月",
           },
         },
       ],

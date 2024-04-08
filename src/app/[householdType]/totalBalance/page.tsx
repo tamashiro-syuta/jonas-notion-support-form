@@ -6,10 +6,15 @@ import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
 import { sendMessage } from "../../actions/sendMessage";
 import { totalBalance } from "../../actions/totalBalance";
+import {
+  castHouseholdType,
+  matchHouseholdType,
+} from "@/lib/db/matchHouseholdType";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: {
-    notionDBId: string;
+    householdType: string;
   };
 }
 
@@ -17,16 +22,21 @@ const serializeResponse = (amount: number): string => {
   return `【今月の合計残額】\n${amount.toLocaleString()}円`;
 };
 
-export default function Page({ params: { notionDBId } }: Props) {
+export default function Page({ params: { householdType } }: Props) {
+  const router = useRouter();
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
     if (!liff || !user) return;
+    if (!matchHouseholdType(householdType)) {
+      showError({ message: "不適切な値が指定されています" });
+      router.push("/");
+    }
 
     try {
       const amount = await totalBalance({
         lineUserId: user.userId,
-        notionDBId: Number(notionDBId),
+        householdType: castHouseholdType(householdType),
       });
 
       await sendMessage({
@@ -37,7 +47,7 @@ export default function Page({ params: { notionDBId } }: Props) {
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
-  }, [liff, notionDBId, user]);
+  }, [liff, user, householdType, router]);
 
   useEffect(() => {
     fetchAndSendBudget();

@@ -7,10 +7,15 @@ import { useCallback, useEffect } from "react";
 import { sendMessage } from "../../actions/sendMessage";
 import { Amount, budgetByGenre } from "../../actions/budgetByGenre";
 import { fetchBalancedGenres, fetchBudgetGenres } from "@/app/actions/db/genre";
+import {
+  castHouseholdType,
+  matchHouseholdType,
+} from "@/lib/db/matchHouseholdType";
+import { useRouter } from "next/router";
 
 interface Props {
   params: {
-    notionDBId: string;
+    householdType: string;
   };
 }
 
@@ -24,22 +29,27 @@ const serializeResponse = (objects: Amount[]) => {
   return messages;
 };
 
-export default function Page({ params: { notionDBId } }: Props) {
+export default function Page({ params: { householdType } }: Props) {
+  const router = useRouter();
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
     if (!liff || !user) return;
+    if (!matchHouseholdType(householdType)) {
+      showError({ message: "不適切な値が指定されています" });
+      router.push("/");
+    }
 
     try {
       const genres = await fetchBudgetGenres({
         lineUserId: user.userId,
-        notionDBId: Number(notionDBId),
+        householdType: castHouseholdType(householdType),
       });
 
       const genreNames = genres.map((genre) => genre.genre);
       const data = await budgetByGenre({
         lineUserId: user.userId,
-        notionDBId: Number(notionDBId),
+        householdType: castHouseholdType(householdType),
         genreNames,
       });
 
@@ -52,7 +62,7 @@ export default function Page({ params: { notionDBId } }: Props) {
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
     }
-  }, [liff, notionDBId, user]);
+  }, [liff, user, householdType, router]);
 
   useEffect(() => {
     fetchAndSendBudget();

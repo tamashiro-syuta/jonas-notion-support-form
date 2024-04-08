@@ -1,21 +1,22 @@
 import { showError } from "@/lib/toast-actions";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { HouseholdType } from "@prisma/client";
 
 interface MenuItemProps {
-  selectedNotionDBId: string | undefined;
+  householdType: string | undefined;
   targetFeatureName: string;
   targetFeaturePath: string;
   isSettings?: boolean;
 }
 
 const MenuItem = ({
-  selectedNotionDBId,
+  householdType,
   targetFeatureName,
   targetFeaturePath,
   isSettings = false,
 }: MenuItemProps) => {
-  if (!selectedNotionDBId) {
+  if (!householdType) {
     return (
       <Button
         variant="outline"
@@ -28,8 +29,8 @@ const MenuItem = ({
   }
 
   const href = isSettings
-    ? `/settings/${selectedNotionDBId}/${targetFeaturePath}`
-    : `/${selectedNotionDBId}/${targetFeaturePath}`;
+    ? `/${householdType}/${targetFeaturePath}/settings`
+    : `/${householdType}/${targetFeaturePath}`;
 
   return (
     <Button

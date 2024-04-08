@@ -10,7 +10,7 @@ import getBudgetForMonth from "@/lib/notion/getBudgetForMonth";
 import getSpendingForMonth from "@/lib/notion/getSpendingForMonth";
 import { BaseColumn, BudgetColumn, SpendingColumn } from "@/lib/notion/types";
 import { loginUserGuard } from "./db/guard";
-import { fetchNotionDBById } from "./db/notionDB";
+import { FetchNotionDBProps, fetchNotionDB } from "./db/notionDB";
 
 export interface Amount extends BaseColumn {
   amount: number;
@@ -53,21 +53,19 @@ function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
   });
 }
 
-interface Props {
-  lineUserId: string;
-  notionDBId: number;
+interface Props extends FetchNotionDBProps {
   genreNames?: string[];
 }
 
 // NOTE: 実行時点での項目別予算
 export async function budgetByGenre({
   lineUserId,
-  notionDBId,
+  householdType,
   genreNames,
 }: Props): Promise<Amount[]> {
   try {
     loginUserGuard(lineUserId);
-    const db = await fetchNotionDBById({ lineUserId, notionDBId });
+    const db = await fetchNotionDB({ lineUserId, householdType });
 
     const thisMonth = new Date().getMonth() + 1;
     const thisMonthBudget = await getBudgetForMonth({

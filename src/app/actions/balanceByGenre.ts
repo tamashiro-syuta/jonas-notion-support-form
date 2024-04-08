@@ -2,22 +2,20 @@
 
 import getBalanceForMonth from "@/lib/notion/getBalanceForMonth";
 import { loginUserGuard } from "./db/guard";
-import { fetchNotionDBById } from "./db/notionDB";
+import { FetchNotionDBProps, fetchNotionDB } from "./db/notionDB";
 
-interface Props {
-  lineUserId: string;
-  notionDBId: number;
+interface Props extends FetchNotionDBProps {
   genreNames?: string[];
 }
 
 export async function balanceByGenre({
   lineUserId,
-  notionDBId,
+  householdType,
   genreNames,
 }: Props) {
   try {
     loginUserGuard(lineUserId);
-    const db = await fetchNotionDBById({ lineUserId, notionDBId });
+    const db = await fetchNotionDB({ lineUserId, householdType });
 
     const thisMonth = new Date().getMonth() + 1;
     const balances = await getBalanceForMonth({

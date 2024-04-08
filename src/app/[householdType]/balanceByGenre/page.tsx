@@ -4,12 +4,21 @@ import { useLiff } from "@/components/custom/LiffProvider";
 import Loading from "@/components/custom/Loading";
 import { showError } from "@/lib/toast-actions";
 import { useCallback, useEffect } from "react";
-import { sendMessage } from "../actions/sendMessage";
-import { balanceByGenre } from "../actions/balanceByGenre";
+import { sendMessage } from "../../actions/sendMessage";
+import { balanceByGenre } from "../../actions/balanceByGenre";
 import { BalanceColumn } from "@/lib/notion/types";
-import { fetchBalancedGenres } from "../actions/db/genre";
-import { fetchDefaultNotionDB } from "../actions/db/notionDB";
+import { fetchBalancedGenres } from "../../actions/db/genre";
+import {
+  castHouseholdType,
+  matchHouseholdType,
+} from "@/lib/db/matchHouseholdType";
 import { useRouter } from "next/navigation";
+
+interface Props {
+  params: {
+    householdType: string;
+  };
+}
 
 const serializeResponse = (balances: BalanceColumn[]): string[] => {
   let messages = ["【項目別の今月の残額】"];
@@ -21,35 +30,39 @@ const serializeResponse = (balances: BalanceColumn[]): string[] => {
   return messages;
 };
 
-export default function Page() {
+export default function Page({ params: { householdType } }: Props) {
   const router = useRouter();
   const { liff, user } = useLiff();
 
   const fetchAndSendBudget = useCallback(async () => {
     if (!liff || !user) return;
+    if (!matchHouseholdType(householdType)) {
+      showError({ message: "不適切な値が指定されています" });
+      router.push("/");
+    }
 
     try {
-      const lineUserId = user.userId;
-      const db = await fetchDefaultNotionDB({ lineUserId });
       const genres = await fetchBalancedGenres({
-        lineUserId,
-        notionDBId: db.id,
+        lineUserId: user.userId,
+        householdType: castHouseholdType(householdType),
       });
 
+      const genreNames = genres.map((genre) => genre.genre);
       const balances = await balanceByGenre({
-        lineUserId,
-        notionDBId: db.id,
-        genreNames: genres.map((genre) => genre.genre),
+        lineUserId: user.userId,
+        householdType: castHouseholdType(householdType),
+        genreNames,
       });
 
-      const message = serializeResponse(balances).join("\n");
-      await sendMessage({ message, lineUserId });
+      await sendMessage({
+        message: serializeResponse(balances).join("\n"),
+        lineUserId: user.userId,
+      });
       await liff.closeWindow();
     } catch (error) {
       showError({ message: `エラーが発生しました。${error}`, duration: 5000 });
-      router.push("/");
     }
-  }, [liff, router, user]);
+  }, [liff, user, householdType, router]);
 
   useEffect(() => {
     fetchAndSendBudget();

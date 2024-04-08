@@ -13,14 +13,18 @@ import { addSpending } from "../../actions/addSpending";
 import { fetchSpendingGenres } from "@/app/actions/db/genre";
 import { Genre } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import {
+  castHouseholdType,
+  matchHouseholdType,
+} from "@/lib/db/matchHouseholdType";
 
 interface Props {
   params: {
-    notionDBId: string;
+    householdType: string;
   };
 }
 
-export default function Page({ params: { notionDBId } }: Props) {
+export default function Page({ params: { householdType } }: Props) {
   const router = useRouter();
   const { liff, user } = useLiff();
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -28,11 +32,15 @@ export default function Page({ params: { notionDBId } }: Props) {
 
   const fetchAndSetBudget = useCallback(async () => {
     if (!liff || !user) return;
+    if (!matchHouseholdType(householdType)) {
+      showError({ message: "不適切な値が指定されています" });
+      router.push("/");
+    }
 
     try {
       const genres = await fetchSpendingGenres({
         lineUserId: user.userId,
-        notionDBId: Number(notionDBId),
+        householdType: castHouseholdType(householdType),
       });
 
       setGenres(genres);
@@ -41,7 +49,7 @@ export default function Page({ params: { notionDBId } }: Props) {
       showError({ message: `${error}` });
       router.push("/");
     }
-  }, [liff, notionDBId, router, user]);
+  }, [liff, householdType, router, user]);
 
   useEffect(() => {
     fetchAndSetBudget();
@@ -57,6 +65,8 @@ export default function Page({ params: { notionDBId } }: Props) {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ genre, amount }) => {
     if (!liff || !user) return;
+    if (!matchHouseholdType(householdType))
+      return showError({ message: "不適切な値が指定されています" });
 
     try {
       const lineUserId = user.userId;
@@ -65,7 +75,7 @@ export default function Page({ params: { notionDBId } }: Props) {
         lineUserId,
         genre,
         amount,
-        notionDBId: Number(notionDBId),
+        householdType: castHouseholdType(householdType),
       });
 
       const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;

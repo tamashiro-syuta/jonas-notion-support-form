@@ -3,27 +3,16 @@
 import { prisma } from "@/lib/db/client";
 import { Genre } from "@prisma/client";
 import { loginUserGuard } from "./guard";
-import { fetchNotionDBById } from "./notionDB";
+import { FetchNotionDBProps } from "./notionDB";
 
 interface BaseProps {
   lineUserId: string;
 }
 
-interface FetchProps extends BaseProps {
-  notionDBId: number;
-}
-
-interface SpendingFetchProps extends BaseProps {
-  notionDBId: number;
-}
-
-interface BalancedFetchProps extends BaseProps {
-  notionDBId: number;
-}
-
-interface BudgetFetchProps extends BaseProps {
-  notionDBId: number;
-}
+interface FetchProps extends BaseProps, FetchNotionDBProps {}
+interface SpendingFetchProps extends BaseProps, FetchNotionDBProps {}
+interface BalancedFetchProps extends BaseProps, FetchNotionDBProps {}
+interface BudgetFetchProps extends BaseProps, FetchNotionDBProps {}
 
 interface BulkUpdateProps extends BaseProps {
   genres: Genre[];
@@ -31,15 +20,16 @@ interface BulkUpdateProps extends BaseProps {
 
 export async function fetchGenres({
   lineUserId,
-  notionDBId,
+  householdType,
 }: FetchProps): Promise<Genre[]> {
   try {
     loginUserGuard(lineUserId);
-    await fetchNotionDBById({ lineUserId, notionDBId });
 
     return await prisma.genre.findMany({
       where: {
-        notionDBId,
+        notionDB: {
+          household: householdType,
+        },
       },
       orderBy: {
         orderNumber: "asc",
@@ -52,16 +42,17 @@ export async function fetchGenres({
 
 export async function fetchSpendingGenres({
   lineUserId,
-  notionDBId,
+  householdType,
 }: SpendingFetchProps): Promise<Genre[]> {
   try {
     loginUserGuard(lineUserId);
-    await fetchNotionDBById({ lineUserId, notionDBId });
 
     return await prisma.genre.findMany({
       where: {
-        notionDBId,
         isSpending: true,
+        notionDB: {
+          household: householdType,
+        },
       },
       orderBy: {
         orderNumber: "asc",
@@ -74,16 +65,17 @@ export async function fetchSpendingGenres({
 
 export async function fetchBalancedGenres({
   lineUserId,
-  notionDBId,
+  householdType,
 }: BalancedFetchProps): Promise<Genre[]> {
   try {
     loginUserGuard(lineUserId);
-    await fetchNotionDBById({ lineUserId, notionDBId });
 
     return await prisma.genre.findMany({
       where: {
-        notionDBId,
         isBalance: true,
+        notionDB: {
+          household: householdType,
+        },
       },
       orderBy: {
         orderNumber: "asc",
@@ -96,16 +88,17 @@ export async function fetchBalancedGenres({
 
 export async function fetchBudgetGenres({
   lineUserId,
-  notionDBId,
+  householdType,
 }: BudgetFetchProps): Promise<Genre[]> {
   try {
     loginUserGuard(lineUserId);
-    await fetchNotionDBById({ lineUserId, notionDBId });
 
     return await prisma.genre.findMany({
       where: {
-        notionDBId,
         isBudget: true,
+        notionDB: {
+          household: householdType,
+        },
       },
       orderBy: {
         orderNumber: "asc",

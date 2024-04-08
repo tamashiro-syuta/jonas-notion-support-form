@@ -14,23 +14,18 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id           Int     @id @default(autoincrement())
-  lineUserId   String  @unique
-  notionDBs    NotionDB[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+enum HouseholdType {
+  INDIVIDUAL
+  PAIRS
 }
 
 model NotionDB {
   id                   Int     @id @default(autoincrement())
-  user                 User @relation(fields: [userId], references: [id])
-  userId               Int
   databaseId           String
   databaseName         String? @unique
   displayDatabaseName  String?
   genres               Genre[]
-  isDefault            Boolean @default(false)
+  household            HouseholdType @default(INDIVIDUAL)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }

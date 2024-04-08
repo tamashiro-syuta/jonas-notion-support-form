@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fetchNotionDBs } from "../actions/db/notionDB";
+import { fetchAllNotionDBs } from "../actions/db/notionDB";
 import { NotionDB } from "@prisma/client";
 import Loading from "@/components/custom/Loading";
 import { useLiff } from "@/components/custom/LiffProvider";
@@ -23,7 +23,9 @@ const Page = () => {
   const fetchNotionDBsCallback = useCallback(async () => {
     if (!user) return;
 
-    const notionDBs = await fetchNotionDBs({ lineUserId: user?.userId || "" });
+    const notionDBs = await fetchAllNotionDBs({
+      lineUserId: user?.userId || "",
+    });
     setNotionDBs(notionDBs);
     setLoading(false);
   }, [user]);

@@ -11,7 +11,7 @@ import {
 import { NotionDB } from "@prisma/client";
 import Loading from "@/components/custom/Loading";
 import { useLiff } from "@/components/custom/LiffProvider";
-import { fetchNotionDBs } from "./actions/db/notionDB";
+import { fetchAllNotionDBs } from "./actions/db/notionDB";
 import { Separator } from "@/components/ui/separator";
 import {
   NotionLogoIcon,
@@ -24,12 +24,14 @@ const Page = () => {
   const { user } = useLiff();
   const [notionDBs, setNotionDBs] = useState<NotionDB[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedNotionDBId, setSelectedNotionDBId] = useState<string>();
+  const [householdType, setHouseholdType] = useState<string>();
 
   const fetchNotionDBsCallback = useCallback(async () => {
     if (!user) return;
 
-    const notionDBs = await fetchNotionDBs({ lineUserId: user?.userId || "" });
+    const notionDBs = await fetchAllNotionDBs({
+      lineUserId: user.userId,
+    });
     setNotionDBs(notionDBs);
     setLoading(false);
   }, [user]);
@@ -42,7 +44,7 @@ const Page = () => {
 
   return (
     <div>
-      <Select onValueChange={setSelectedNotionDBId}>
+      <Select onValueChange={setHouseholdType}>
         <div className="flex items-center">
           <NotionLogoIcon className="h-6 w-6" />
           <h1 className="pl-1 text-xl text-left py-1">
@@ -54,7 +56,7 @@ const Page = () => {
         </SelectTrigger>
         <SelectContent>
           {notionDBs.map((notionDB) => (
-            <SelectItem key={notionDB.id} value={notionDB.id.toString()}>
+            <SelectItem key={notionDB.id} value={notionDB.household}>
               {notionDB.displayDatabaseName}
             </SelectItem>
           ))}
@@ -68,19 +70,19 @@ const Page = () => {
         </div>
         <Separator className="mb-2" />
         <MenuItem
-          selectedNotionDBId={selectedNotionDBId}
+          householdType={householdType}
           targetFeatureName="支出の追加"
           targetFeaturePath="addSpending"
         />
 
         <MenuItem
-          selectedNotionDBId={selectedNotionDBId}
+          householdType={householdType}
           targetFeatureName="項目別の予算"
           targetFeaturePath="balanceByGenre"
         />
 
         <MenuItem
-          selectedNotionDBId={selectedNotionDBId}
+          householdType={householdType}
           targetFeatureName="今月の残額"
           targetFeaturePath="budgetByGenre"
         />
@@ -93,21 +95,21 @@ const Page = () => {
         </div>
         <Separator className="mb-2" />
         <MenuItem
-          selectedNotionDBId={selectedNotionDBId}
+          householdType={householdType}
           targetFeatureName="支出の追加"
           targetFeaturePath="addSpending"
           isSettings
         />
 
         <MenuItem
-          selectedNotionDBId={selectedNotionDBId}
+          householdType={householdType}
           targetFeatureName="項目別の予算"
           targetFeaturePath="balanceByGenre"
           isSettings
         />
 
         <MenuItem
-          selectedNotionDBId={selectedNotionDBId}
+          householdType={householdType}
           targetFeatureName="今月の残額"
           targetFeaturePath="budgetByGenre"
           isSettings
