@@ -126,16 +126,14 @@ const Page = ({ params: { householdType } }: Props) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 mx-2">
-        <p className="text-lg mt-2 px-2 pt-2 font-bold w-full">
-          支出項目の設定
-        </p>
+        <p className="text-xl mt-2 px-2 pt-2 w-full">支出項目の設定</p>
         {genres.map((genre) => (
           <FormField
             key={genre.id}
             control={form.control}
             name={genre.genre as never}
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between md:p-3 py-1 px-3">
+              <FormItem className="flex flex-row items-center justify-between md:p-3 py-2 px-3">
                 <FormLabel>{genre.genre}</FormLabel>
                 <FormMessage />
                 <FormControl>
@@ -143,13 +141,18 @@ const Page = ({ params: { householdType } }: Props) => {
                     defaultChecked={genre.isSpending}
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="data-[state=checked]:bg-stone-600 data-[state=unchecked]:bg-stone-200"
                   />
                 </FormControl>
               </FormItem>
             )}
           />
         ))}
-        <Button type="submit" className="w-full">
+        <Button
+          variant="secondary"
+          type="submit"
+          className="w-full shadow bg-secondary hover:text-primary hover:bg-stone-200 text-primary py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
           更新
         </Button>
       </form>

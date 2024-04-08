@@ -18,6 +18,7 @@ import {
   matchHouseholdType,
 } from "@/lib/db/matchHouseholdType";
 import { ADD_SPENDING } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   params: {
@@ -147,13 +148,14 @@ export default function Page({ params: { householdType } }: Props) {
           )}
         </div>
         <div className="flex items-center justify-between">
-          <button
+          <Button
             disabled={isSubmitting}
-            className="w-full bg-primary hover:text-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            variant="secondary"
             type="submit"
+            className="w-full shadow bg-secondary hover:text-primary hover:bg-stone-200 text-primary py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            どすこい !!!
-          </button>
+            追加
+          </Button>
         </div>
       </form>
     </div>

@@ -18,8 +18,8 @@ const MenuItem = ({
   if (!householdType) {
     return (
       <Button
-        variant="outline"
-        className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
+        variant="secondary"
+        className="w-full text-base my-2 h-16 shadow-md hover:bg-stone-200"
         onClick={() => showError({ message: "家計簿を選択してください" })}
       >
         {targetFeatureName}
@@ -34,8 +34,8 @@ const MenuItem = ({
   return (
     <Button
       asChild
-      variant="link"
-      className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
+      variant="secondary"
+      className="w-full text-base my-2 h-16 shadow-md hover:bg-stone-200"
     >
       <Link href={href}>{targetFeatureName}</Link>
     </Button>

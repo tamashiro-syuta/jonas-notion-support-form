@@ -39,16 +39,16 @@ export const SideBar = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <HamburgerMenuIcon className="w-8 h-8 py-2 mx-2 text-white" />
+        <HamburgerMenuIcon className="w-8 h-8 py-2 mx-2 text-primary" />
       </SheetTrigger>
-      <SheetContent side="left" className="bg-neutral-100">
+      <SheetContent side="left" className="bg-secondary">
         <SheetHeader className="text-left">
           <Tabs
             defaultValue={HouseholdType.INDIVIDUAL}
             onValueChange={onTabChange}
-            className="w-full mt-4 mb-1 border rounded-md"
+            className="w-full mt-4 mb-1 border rounded-full"
           >
-            <TabsList className="w-full bg-neutral-100">
+            <TabsList className="w-full bg-secondary">
               <TabsTrigger
                 value={HouseholdType.INDIVIDUAL}
                 className="w-full text-sm"
@@ -64,7 +64,7 @@ export const SideBar = () => {
             </TabsList>
           </Tabs>
         </SheetHeader>
-        <SheetHeader className="mt-2 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white border-neutral-800">
+        <SheetHeader className="mt-2 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white border-primary">
           <div className="flex items-center">
             <PaperPlaneIcon className="h-5 w-5" />
             <h2 className="pl-2 text-xl text-left">LINE通知</h2>
@@ -101,7 +101,7 @@ export const SideBar = () => {
           </Link>
         </SheetClose>
 
-        <SheetHeader className="mt-6 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white border-neutral-800">
+        <SheetHeader className="mt-6 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white border-primary">
           <div className="flex items-center">
             <GearIcon className="h-6 w-6" />
             <h2 className="pl-2 text-xl text-left">{SETTINGS}</h2>
