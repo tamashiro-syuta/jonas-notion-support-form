@@ -1,11 +1,5 @@
 "use server";
 
-import {
-  ASSET,
-  COMMUNICATION_EXPENSES,
-  INCOME,
-  INSURANCE,
-} from "@/lib/notion/constants";
 import getBudgetForMonth from "@/lib/notion/getBudgetForMonth";
 import getSpendingForMonth from "@/lib/notion/getSpendingForMonth";
 import { BaseColumn, BudgetColumn, SpendingColumn } from "@/lib/notion/types";
@@ -42,17 +36,6 @@ function calcAmountCanSpendThisMonth({
   });
 }
 
-function excludeUnnecessaryGenres(amounts: Amount[]): Amount[] {
-  const UNNECESSARY_GENRES = [INSURANCE, ASSET, INCOME, COMMUNICATION_EXPENSES];
-
-  return amounts.filter((amount) => {
-    const includeUnnecessaryGenre = (UNNECESSARY_GENRES as string[]).includes(
-      amount.genre
-    );
-    if (!includeUnnecessaryGenre) return amount;
-  });
-}
-
 interface Props extends FetchNotionDBProps {
   genreNames?: string[];
 }
@@ -82,8 +65,9 @@ export async function budgetByGenre({
       thisMonthSpending,
     });
 
-    const necessaryAmounts = excludeUnnecessaryGenres(amountCanSpendThisMonth);
-    const sortedAmounts = necessaryAmounts.sort((a, b) => a.order - b.order);
+    const sortedAmounts = amountCanSpendThisMonth.sort(
+      (a, b) => a.order - b.order
+    );
 
     if (genreNames) {
       const filteredAmounts = sortedAmounts.filter((amount) => {
