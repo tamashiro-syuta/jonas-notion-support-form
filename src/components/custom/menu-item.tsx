@@ -22,7 +22,7 @@ const MenuItem = ({
         className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
         onClick={() => showError({ message: "家計簿を選択してください" })}
       >
-        {targetFeatureName} へ
+        {targetFeatureName}
       </Button>
     );
   }
@@ -37,7 +37,7 @@ const MenuItem = ({
       variant="link"
       className="w-full text-base my-2 h-16 hover:bg-gray-100 border-2 border-primary"
     >
-      <Link href={href}>{targetFeatureName} へ</Link>
+      <Link href={href}>{targetFeatureName}</Link>
     </Button>
   );
 };

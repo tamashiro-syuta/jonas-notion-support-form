@@ -19,10 +19,16 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { HouseholdType } from "@prisma/client";
+import {
+  ADD_SPENDING,
+  BALANCE_BY_GENRE,
+  BUDGET_BY_GENRE,
+  SETTINGS,
+  INDIVIDUAL_HOUSEHOLD_NAME,
+  PAIRS_HOUSEHOLD_NAME,
+} from "@/lib/constants";
 
 export const SideBar = () => {
-  const INDIVIDUAL_HOUSEHOLD_NAME = "個人家計簿";
-  const PAIRS_HOUSEHOLD_NAME = "同棲家計簿";
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const householdType = isChecked
@@ -49,7 +55,7 @@ export const SideBar = () => {
         <SheetHeader className="text-left px-2">
           <Label className="text-2xl">{selectedHouseholdType}</Label>
           <div className="flex items-center justify-end space-x-2 pt-2">
-            <Label className="text-sm">{`${unselectedHouseholdType} へ`}</Label>
+            <Label className="text-sm">{unselectedHouseholdType}</Label>
             <Switch
               checked={isPairs}
               onCheckedChange={setIsChecked}
@@ -78,7 +84,7 @@ export const SideBar = () => {
               <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                 <ChevronRightIcon className="w-full h-full" />
               </div>
-              <span className="ms-3">支出の追加</span>
+              <span className="ms-3">{ADD_SPENDING}</span>
             </div>
           </Link>
         </SheetClose>
@@ -88,7 +94,7 @@ export const SideBar = () => {
               <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                 <ChevronRightIcon className="w-full h-full" />
               </div>
-              <span className="ms-3">項目別の予算</span>
+              <span className="ms-3">{BUDGET_BY_GENRE}</span>
             </div>
           </Link>
         </SheetClose>
@@ -98,7 +104,7 @@ export const SideBar = () => {
               <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                 <ChevronRightIcon className="w-full h-full" />
               </div>
-              <span className="ms-3">今月の残額</span>
+              <span className="ms-3">{BALANCE_BY_GENRE}</span>
             </div>
           </Link>
         </SheetClose>
@@ -111,7 +117,7 @@ export const SideBar = () => {
         >
           <div className="flex items-center">
             <GearIcon className="h-6 w-6" />
-            <h2 className="pl-2 text-xl text-left">設定</h2>
+            <h2 className="pl-2 text-xl text-left">{SETTINGS}</h2>
           </div>
         </SheetHeader>
         <SheetClose asChild className="w-full">
@@ -120,7 +126,7 @@ export const SideBar = () => {
               <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                 <ChevronRightIcon className="w-full h-full" />
               </div>
-              <span className="ms-3">支出の追加</span>
+              <span className="ms-3">{ADD_SPENDING}</span>
             </div>
           </Link>
         </SheetClose>
@@ -130,7 +136,7 @@ export const SideBar = () => {
               <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                 <ChevronRightIcon className="w-full h-full" />
               </div>
-              <span className="ms-3">項目別の予算</span>
+              <span className="ms-3">{BUDGET_BY_GENRE}</span>
             </div>
           </Link>
         </SheetClose>
@@ -140,7 +146,7 @@ export const SideBar = () => {
               <div className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                 <ChevronRightIcon className="w-full h-full" />
               </div>
-              <span className="ms-3">今月の残額</span>
+              <span className="ms-3">{BALANCE_BY_GENRE}</span>
             </div>
           </Link>
         </SheetClose>

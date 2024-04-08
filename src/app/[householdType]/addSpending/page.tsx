@@ -17,6 +17,7 @@ import {
   castHouseholdType,
   matchHouseholdType,
 } from "@/lib/db/matchHouseholdType";
+import { ADD_SPENDING } from "@/lib/constants";
 
 interface Props {
   params: {
@@ -78,7 +79,7 @@ export default function Page({ params: { householdType } }: Props) {
         householdType: castHouseholdType(householdType),
       });
 
-      const message = `【支出の追加】\n項目: ${genre}\n金額: ${amount}円`;
+      const message = `【${ADD_SPENDING}】\n項目: ${genre}\n金額: ${amount}円`;
       await sendMessage({ message, lineUserId });
 
       await liff.closeWindow();

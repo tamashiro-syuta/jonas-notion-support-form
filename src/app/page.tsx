@@ -19,6 +19,12 @@ import {
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import MenuItem from "@/components/custom/menu-item";
+import {
+  ADD_SPENDING,
+  BALANCE_BY_GENRE,
+  BUDGET_BY_GENRE,
+  SETTINGS,
+} from "@/lib/constants";
 
 const Page = () => {
   const { user } = useLiff();
@@ -71,47 +77,47 @@ const Page = () => {
         <Separator className="mb-2" />
         <MenuItem
           householdType={householdType}
-          targetFeatureName="支出の追加"
+          targetFeatureName={ADD_SPENDING}
           targetFeaturePath="addSpending"
         />
 
         <MenuItem
           householdType={householdType}
-          targetFeatureName="項目別の予算"
-          targetFeaturePath="balanceByGenre"
+          targetFeatureName={BUDGET_BY_GENRE}
+          targetFeaturePath="budgetByGenre"
         />
 
         <MenuItem
           householdType={householdType}
-          targetFeatureName="今月の残額"
-          targetFeaturePath="budgetByGenre"
+          targetFeatureName={BALANCE_BY_GENRE}
+          targetFeaturePath="balanceByGenre"
         />
       </div>
 
       <div>
         <div className="flex items-center mt-6">
           <GearIcon className="h-6 w-6" />
-          <h1 className="pl-1 text-xl text-left py-1">設定</h1>
+          <h1 className="pl-1 text-xl text-left py-1">{SETTINGS}</h1>
         </div>
         <Separator className="mb-2" />
         <MenuItem
           householdType={householdType}
-          targetFeatureName="支出の追加"
+          targetFeatureName={ADD_SPENDING}
           targetFeaturePath="addSpending"
           isSettings
         />
 
         <MenuItem
           householdType={householdType}
-          targetFeatureName="項目別の予算"
-          targetFeaturePath="balanceByGenre"
+          targetFeatureName={BUDGET_BY_GENRE}
+          targetFeaturePath="budgetByGenre"
           isSettings
         />
 
         <MenuItem
           householdType={householdType}
-          targetFeatureName="今月の残額"
-          targetFeaturePath="budgetByGenre"
+          targetFeatureName={BALANCE_BY_GENRE}
+          targetFeaturePath="balanceByGenre"
           isSettings
         />
       </div>

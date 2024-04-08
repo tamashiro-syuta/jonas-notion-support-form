@@ -12,6 +12,7 @@ import {
   matchHouseholdType,
 } from "@/lib/db/matchHouseholdType";
 import { useRouter } from "next/navigation";
+import { BUDGET_BY_GENRE } from "@/lib/constants";
 
 interface Props {
   params: {
@@ -20,7 +21,7 @@ interface Props {
 }
 
 const serializeResponse = (objects: Amount[]) => {
-  let messages = ["【項目別の予算】"];
+  let messages = [`【${BUDGET_BY_GENRE}】`];
 
   objects.forEach((object) => {
     messages.push(`${object.genre} : ${object.amount.toLocaleString()}円`);
