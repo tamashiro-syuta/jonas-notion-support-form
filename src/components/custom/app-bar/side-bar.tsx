@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import clsx from "clsx";
 import {
   Sheet,
   SheetClose,
@@ -16,8 +15,6 @@ import {
   HamburgerMenuIcon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { HouseholdType } from "@prisma/client";
 import {
   ADD_SPENDING,
@@ -27,52 +24,47 @@ import {
   INDIVIDUAL_HOUSEHOLD_NAME,
   PAIRS_HOUSEHOLD_NAME,
 } from "@/lib/constants";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { castHouseholdType } from "@/lib/db/matchHouseholdType";
 
 export const SideBar = () => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [householdType, setHouseholdType] = useState<HouseholdType>(
+    HouseholdType.INDIVIDUAL
+  );
 
-  const householdType = isChecked
-    ? HouseholdType.PAIRS
-    : HouseholdType.INDIVIDUAL;
-
-  const isPairs = householdType === HouseholdType.PAIRS;
-  const selectedHouseholdType = isPairs
-    ? PAIRS_HOUSEHOLD_NAME
-    : INDIVIDUAL_HOUSEHOLD_NAME;
-  const unselectedHouseholdType = isPairs
-    ? INDIVIDUAL_HOUSEHOLD_NAME
-    : PAIRS_HOUSEHOLD_NAME;
+  const onTabChange = (value: string) => {
+    setHouseholdType(castHouseholdType(value));
+  };
 
   return (
     <Sheet>
       <SheetTrigger asChild>
         <HamburgerMenuIcon className="w-8 h-8 py-2 mx-2 text-white" />
       </SheetTrigger>
-      <SheetContent
-        side="left"
-        className={clsx(isPairs ? "bg-cyan-50" : "bg-neutral-100")}
-      >
-        <SheetHeader className="text-left px-2">
-          <Label className="text-2xl">{selectedHouseholdType}</Label>
-          <div className="flex items-center justify-end space-x-2 pt-2">
-            <Label className="text-sm">{unselectedHouseholdType}</Label>
-            <Switch
-              checked={isPairs}
-              onCheckedChange={setIsChecked}
-              className={clsx(
-                isPairs
-                  ? "data-[state=checked]:bg-cyan-800"
-                  : "data-[state=unchecked]:bg-neutral-800"
-              )}
-            />
-          </div>
+      <SheetContent side="left" className="bg-neutral-100">
+        <SheetHeader className="text-left">
+          <Tabs
+            defaultValue={HouseholdType.INDIVIDUAL}
+            onValueChange={onTabChange}
+            className="w-full mt-4 mb-1 border rounded-md"
+          >
+            <TabsList className="w-full bg-neutral-100">
+              <TabsTrigger
+                value={HouseholdType.INDIVIDUAL}
+                className="w-full text-sm"
+              >
+                {INDIVIDUAL_HOUSEHOLD_NAME}
+              </TabsTrigger>
+              <TabsTrigger
+                value={HouseholdType.PAIRS}
+                className="w-full text-sm"
+              >
+                {PAIRS_HOUSEHOLD_NAME}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </SheetHeader>
-        <SheetHeader
-          className={clsx(
-            "mt-6 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white",
-            isPairs ? "border-cyan-800" : "border-neutral-800"
-          )}
-        >
+        <SheetHeader className="mt-2 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white border-neutral-800">
           <div className="flex items-center">
             <PaperPlaneIcon className="h-5 w-5" />
             <h2 className="pl-2 text-xl text-left">LINE通知</h2>
@@ -109,12 +101,7 @@ export const SideBar = () => {
           </Link>
         </SheetClose>
 
-        <SheetHeader
-          className={clsx(
-            "mt-6 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white",
-            isPairs ? "border-cyan-800" : "border-neutral-800"
-          )}
-        >
+        <SheetHeader className="mt-6 text-xl text-left px-2 py-2 mb-1 border-l-4 bg-white border-neutral-800">
           <div className="flex items-center">
             <GearIcon className="h-6 w-6" />
             <h2 className="pl-2 text-xl text-left">{SETTINGS}</h2>
