@@ -7,6 +7,7 @@ import AppBar from "@/components/custom/app-bar";
 import { Toaster } from "sonner";
 import { Breadcrumb } from "@/components/custom/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -41,6 +42,7 @@ export default function RootLayout({
 
           <Toaster />
         </LiffProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
