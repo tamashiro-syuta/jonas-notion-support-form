@@ -25,6 +25,7 @@ import {
   castHouseholdType,
   matchHouseholdType,
 } from "@/lib/db/matchHouseholdType";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface Props {
   params: {
@@ -49,7 +50,11 @@ const Page = ({ params: { householdType } }: Props) => {
   const form = useForm<z.infer<typeof dynamicFormSchema>>({
     resolver: zodResolver(dynamicFormSchema),
     defaultValues: genres.reduce((acc, genre, index) => {
-      if (index === 0) return { [genre.genre]: genre.isSpending };
+      if (index === 0)
+        return {
+          checkbox: null,
+          [genre.genre]: genre.isSpending,
+        };
       return { ...acc, [genre.genre]: genre.isSpending };
     }, {}),
   });
@@ -87,6 +92,18 @@ const Page = ({ params: { householdType } }: Props) => {
     }
   }
 
+  const changeAllTrue = () => {
+    genres.forEach((genre) => {
+      form.setValue(genre.genre as never, true as never);
+    });
+  };
+
+  const changeAllFalse = () => {
+    genres.forEach((genre) => {
+      form.setValue(genre.genre as never, false as never);
+    });
+  };
+
   const fetch = useCallback(async () => {
     if (!user) return;
     if (!matchHouseholdType(householdType)) {
@@ -121,12 +138,75 @@ const Page = ({ params: { householdType } }: Props) => {
     fetch();
   }, [fetch]);
 
+  console.log("form", form.getValues());
+
   if (loading) return <Loading />;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 mx-2">
-        <p className="text-xl mt-2 px-2 pt-2 w-full">支出項目の設定</p>
+        <div className="flex flex-row items-center justify-center mt-2 px-2 pt-2">
+          <p className="basis-1/2 text-xl w-full pb-2">支出項目の設定</p>
+          <div className="basis-1/2 flex flex-row justify-end">
+            <FormField
+              control={form.control}
+              name={"checkbox" as never}
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormControl className="flex flex-row justify-end">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-row space-y-1 justify-end"
+                    >
+                      <FormItem className="flex flex-row items-center space-x-2">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="all-selected"
+                            id="all-selected"
+                            className="h-5 w-5"
+                            onClick={changeAllTrue}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">全選択</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="clear"
+                          id="clear"
+                          className="h-5 w-5"
+                          onClick={changeAllFalse}
+                        />
+                        <FormLabel className="font-normal">クリア</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* <RadioGroup className="basis-1/2 flex justify-end">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="all-selected"
+                id="all-selected"
+                className="h-5 w-5"
+                onClick={changeAllTrue}
+              />
+              <Label htmlFor="all-selected">全選択</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="clear"
+                id="clear"
+                className="h-5 w-5"
+                onClick={changeAllFalse}
+              />
+              <Label htmlFor="clear">クリア</Label>
+            </div>
+          </RadioGroup> */}
+        </div>
         {genres.map((genre) => (
           <FormField
             key={genre.id}
@@ -136,7 +216,12 @@ const Page = ({ params: { householdType } }: Props) => {
               <FormItem className="flex flex-row items-center justify-between md:p-3 py-2 px-3">
                 <FormLabel>{genre.genre}</FormLabel>
                 <FormMessage />
-                <FormControl>
+                <FormControl
+                  onClick={() => {
+                    console.log("asdfasdf");
+                    form.setValue("checkbox" as never, undefined as never);
+                  }}
+                >
                   <Switch
                     defaultChecked={genre.isSpending}
                     checked={field.value}
